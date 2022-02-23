@@ -18,7 +18,7 @@ Babel 使用的抽象语法树规范参考[官方文档](https://github.com/babe
 
 使用网站[astexplorer](https://astexplorer.net/)可以方便的查看任意 JS 代码抽象语法树结构。左边是源码，右边是对应的抽象语法树。
 
-![ast-explorer](./ast-explorer.png)
+![ast-explorer](/images/ast-explorer.png)
 
 # 节点类型
 
