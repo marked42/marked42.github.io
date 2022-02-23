@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"marked42.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。 如果你对相关内容非常熟悉，不妨直接跳到习题部分，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。 解构为什么引入解构ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。 123456const p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解构与展开">
+<meta property="og:url" content="http://marked42.github.io/2022/02/23/js/destructuring-spread/index.html">
+<meta property="og:site_name" content="Epiphany">
+<meta property="og:description" content="ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。 如果你对相关内容非常熟悉，不妨直接跳到习题部分，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。 解构为什么引入解构ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。 123456const p">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-23T09:33:00.096Z">
+<meta property="article:modified_time" content="2022-02-23T09:33:00.096Z">
+<meta property="article:author" content="penghui">
+<meta property="article:tag" content="解构">
+<meta property="article:tag" content="展开">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="ECMAScript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://marked42.github.io/2022/02/23/js/destructuring-spread/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>解构与展开 | Epiphany</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Epiphany</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/marked42" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://marked42.github.io/2022/02/23/js/destructuring-spread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="penghui">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Epiphany">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解构与展开
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-23 09:33:00" itemprop="dateCreated datePublished" datetime="2022-02-23T09:33:00+00:00">2022-02-23</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。</p>
+<p>如果你对相关内容非常熟悉，不妨直接跳到<a href="#quiz">习题部分</a>，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。</p>
+<h1 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h1><h2 id="为什么引入解构"><a href="#为什么引入解构" class="headerlink" title="为什么引入解构"></a>为什么引入解构</h2><p>ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">firstName</span>: <span class="string">&#x27;Jackie&#x27;</span></span><br><span class="line">  <span class="attr">lastName</span>: <span class="string">&#x27;Chen&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 多次赋值写法</span></span><br><span class="line"><span class="keyword">const</span> firstName = person.<span class="property">firstName</span>, lastName = person.<span class="property">lastName</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用和对象字面量一致的形式从目标值中一次提取多个变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解构语法</span></span><br><span class="line"><span class="keyword">const</span> &#123; firstName, lastName &#125; = person</span><br></pre></td></tr></table></figure>
+
+<h2 id="对象解构"><a href="#对象解构" class="headerlink" title="对象解构"></a>对象解构</h2><p>解构对象值<code>person</code>，用对象属性<code>firstName</code>的值定义指定名称<code>fn</code>的变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; <span class="attr">firstName</span>: fn, <span class="attr">lastName</span>: ln &#125; = person</span><br></pre></td></tr></table></figure>
+
+<p>对象属性名称和指定变量名称相同时可以使用简写形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; firstName, lastName &#125; = person</span><br></pre></td></tr></table></figure>
+
+<p>对象解构的写法和对象字面量形式相同，因此也可以使用数字、字符串和计算属性形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用字符串</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="string">&#x27;fizz-buzz&#x27;</span>: fizzBuzz &#125; = &#123; <span class="string">&#x27;fizz-buzz&#x27;</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数字</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="number">2</span>: fizzBuzz &#125; = [<span class="literal">undefined</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算属性</span></span><br><span class="line"><span class="keyword">const</span> key = <span class="string">&#x27;fizz-buzz&#x27;</span></span><br><span class="line"><span class="keyword">const</span> &#123; [key]: fizzBuzz &#125; = &#123; <span class="string">&#x27;fizz-buzz&#x27;</span>: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>解构对象的目标值是<code>null/undefined</code>时会报错，因为对象解构要求目标值可以转换为对象<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-requireobjectcoercible">RequireObjectCoercible</a>，Javascript 中除了<code>null/undefined</code>其他值都可以转换为对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = <span class="literal">null</span></span><br><span class="line"><span class="comment">// 运行时报错 Uncaught TypeError: Cannot destructure property &#x27;a&#x27; of &#x27;null&#x27; as it is null.</span></span><br><span class="line"><span class="keyword">const</span> &#123; firstName &#125; = person</span><br></pre></td></tr></table></figure>
+
+<p>使用解构对象形式获取数组中指定下标的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; <span class="number">2</span>: c &#125; = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>基础类型值也可以使用对象解构，获取字符串的长度。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; length &#125; = <span class="string">&#x27;string&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="数组解构"><a href="#数组解构" class="headerlink" title="数组解构"></a>数组解构</h2><p>使用数组字面值类似的写法可以解构数组中元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> date = [<span class="string">&#x27;1970&#x27;</span>, <span class="string">&#x27;12&#x27;</span>, <span class="string">&#x27;01&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [year, month, day] = date</span><br></pre></td></tr></table></figure>
+
+<p>使用单独的逗号可以<strong>跳过</strong>数组中的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> date = [<span class="string">&#x27;1970&#x27;</span>, <span class="string">&#x27;12&#x27;</span>, <span class="string">&#x27;01&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 跳过元素 month</span></span><br><span class="line"><span class="keyword">const</span> [year, , day] = date</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以用在开头，跳过year</span></span><br><span class="line"><span class="keyword">const</span> [, month, day] = date</span><br></pre></td></tr></table></figure>
+
+<p>使用数组解构交换（swap）两个变量，不需要临时变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">1</span>,</span><br><span class="line">  y = <span class="number">2</span></span><br><span class="line">;[x, y] = [y, x]</span><br></pre></td></tr></table></figure>
+
+<p>或者交换已有数组中两个元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">;[arr[<span class="number">2</span>], arr[<span class="number">1</span>]] = [arr[<span class="number">1</span>], arr[<span class="number">2</span>]]</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr) <span class="comment">// [1,3,2]</span></span><br></pre></td></tr></table></figure>
+
+<p>数组解构的目标值必须是<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#iterable_examples">Iterable</a>，实现了迭代器协议<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-getiterator">GetIterator</a>，否则会报错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TypeError: &#123;&#125; is not iterable</span></span><br><span class="line"><span class="keyword">const</span> [year, month] = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="嵌套解构"><a href="#嵌套解构" class="headerlink" title="嵌套解构"></a>嵌套解构</h2><p>对象解构支持嵌套形式，可以在同一处解构不同层次的多个属性。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> note = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&#x27;My first note&#x27;</span>,</span><br><span class="line">  <span class="attr">date</span>: <span class="string">&#x27;01/01/1970&#x27;</span>,</span><br><span class="line">  <span class="attr">author</span>: &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&#x27;Sherlock&#x27;</span>,</span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&#x27;Holmes&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;</span><br><span class="line">  id,</span><br><span class="line">  title,</span><br><span class="line">  date,</span><br><span class="line">  <span class="attr">author</span>: &#123; firstName, lastName &#125;,</span><br><span class="line">&#125; = note</span><br></pre></td></tr></table></figure>
+
+<p>注意上边的解构中定义了五个变量，不包括<code>author</code>，嵌套的形式中对应属性名不属于解构变量。如果想同时解构声明<code>author</code>变量的话，使用下面的形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123;</span><br><span class="line">  <span class="comment">// 定义变量 author</span></span><br><span class="line">  author,</span><br><span class="line">  <span class="comment">// 定义变量 firstName/lastName</span></span><br><span class="line">  <span class="attr">author</span>: &#123; firstName, lastName &#125;,</span><br><span class="line">&#125; = note</span><br></pre></td></tr></table></figure>
+
+<p>数组解构也支持嵌套形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nestedArray = [<span class="number">1</span>, <span class="number">2</span>, [<span class="number">3</span>, <span class="number">4</span>], <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 嵌套数组</span></span><br><span class="line"><span class="keyword">const</span> [one, two, [three, four], five] = nestedArray</span><br></pre></td></tr></table></figure>
+
+<p>对象解构和数组解构可以任意形式嵌套。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> note = &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&#x27;My first note&#x27;</span>,</span><br><span class="line">  <span class="attr">author</span>: &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&#x27;Sherlock&#x27;</span>,</span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&#x27;Holmes&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">tags</span>: [<span class="string">&#x27;personal&#x27;</span>, <span class="string">&#x27;writing&#x27;</span>, <span class="string">&#x27;investigations&#x27;</span>],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;</span><br><span class="line">  title,</span><br><span class="line">  <span class="attr">author</span>: &#123; firstName &#125;,</span><br><span class="line">  <span class="attr">tags</span>: [personalTag, writingTag],</span><br><span class="line">&#125; = note</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(date)</span><br></pre></td></tr></table></figure>
+
+<p>一个比较特殊的用法是数组解构的其余元素位置可以直接再次使用对象解构形式，这样的语法设计也能够立即，数组其余元素收集得到值是数组类型，数组也是对象，也可以使用对象解构形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a = [2, 3]</span></span><br><span class="line"><span class="keyword">const</span> [, ...a] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// length:  2</span></span><br><span class="line"><span class="keyword">const</span> [, ...&#123; length &#125;] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+<p>反过来则不成立，对象解构的其余属性位置不能嵌套使用数组解构形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// syntax error</span></span><br><span class="line"><span class="keyword">let</span> &#123; ...[ ] &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="未匹配模式"><a href="#未匹配模式" class="headerlink" title="未匹配模式"></a>未匹配模式</h2><p>对象和数组解构形式中不存在匹配的元素或者属性时，解构得到的变量值为<code>undefined</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b === undefined</span></span><br><span class="line"><span class="keyword">var</span> &#123; a, b &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// b === undefined</span></span><br><span class="line"><span class="keyword">var</span> [a, b] = [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h2><p>使用等号指定解构变量的默认值，默认值在解构得到<code>undefined</code>时生效。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// b === 2</span></span><br><span class="line"><span class="keyword">var</span> &#123; a, b = <span class="number">2</span> &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同时使用修改名称和默认值语法</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">prop</span>: p = <span class="number">123</span> &#125; = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// b === 2</span></span><br><span class="line"><span class="keyword">var</span> [a, b = <span class="number">2</span>] = [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="其余元素-属性（Rest-Element-Property）"><a href="#其余元素-属性（Rest-Element-Property）" class="headerlink" title="其余元素/属性（Rest Element/Property）"></a>其余元素/属性（Rest Element/Property）</h2><p>对象解构中可以使用<code>...rest</code>形式将未指定的属性统一收集到<code>rest</code>变量代表的对象中，称为对象的其余属性（Rest Property）。对象解构中只能有一个其余属性，位置必须是最后一个。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> &#123; a, ...rest &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SyntaxError: Rest element must be last element</span></span><br><span class="line"><span class="keyword">var</span> &#123; ..<span class="property">rest</span>, a &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SyntaxError: Rest element must be last element 指y</span></span><br><span class="line"><span class="keyword">let</span> &#123; x, ...y, ...z &#125; = obj;</span><br></pre></td></tr></table></figure>
+
+<p>数组解构中可以使用<code>...rest</code>形式将未指定的数组元素统一收集到<code>rest</code>变量代表的数组中，称为数组的其余元素（Rest Element）。数组解构中只能有一个其余元素（Rest Element），必须是最后一个。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> [a, ...rest] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// SyntaxError: Rest element must be last element</span></span><br><span class="line"><span class="keyword">var</span> [...rest, a] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+<p>对于多层嵌套的解构形式，可以在每一层都使用一次。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">foo</span>: &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">b</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">c</span>: <span class="number">3</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">bar</span>: <span class="number">4</span>,</span><br><span class="line">  <span class="attr">baz</span>: <span class="number">5</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> &#123;</span><br><span class="line">  <span class="attr">foo</span>: &#123; a, ...rest1 &#125;,</span><br><span class="line">  ...rest2</span><br><span class="line">&#125; = obj</span><br></pre></td></tr></table></figure>
+
+<p>其余元素只能对<strong>对象本身</strong>的未被指定的<strong>可枚举属性</strong>进行收集，不包括不可枚举属性和原型对象的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prototype = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(prototype, &#123;</span><br><span class="line">  <span class="comment">// 只收集 b</span></span><br><span class="line">  <span class="attr">b</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">enumerable</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">c</span>: &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="attr">enumerable</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; ...prop &#125; = obj</span><br><span class="line"><span class="comment">// prop: &#123; b: 2 &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;prop: &#x27;</span>, prop)</span><br></pre></td></tr></table></figure>
+
+<h2 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h2><p>函数参数的传递与数组解构处理类似，可以使用其余参数形式（<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters">RestParameters</a>）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f1</span>(<span class="params">«pattern1», «pattern2»</span>) &#123;</span><br><span class="line">  <span class="comment">// ···</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f2</span>(<span class="params">...args</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [«pattern1», «pattern2»] = args;</span><br><span class="line">  <span class="comment">// ···</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="命名参数"><a href="#命名参数" class="headerlink" title="命名参数"></a>命名参数</h3><p>函数定义中参数可以使用对象解构形式，来实现命名参数（Named Parameter）的效果。命名参数的好处在于参数顺序不影响结果，含义更加清晰，结合参数默认值使用更加灵活。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">drawChart</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">  size = <span class="string">&#x27;big&#x27;</span>,</span></span><br><span class="line"><span class="params">  coords = &#123; x: <span class="number">0</span>, y: <span class="number">0</span> &#125;,</span></span><br><span class="line"><span class="params">  radius = <span class="number">25</span>,</span></span><br><span class="line"><span class="params">&#125; = &#123;&#125;</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(size, coords, radius)</span><br><span class="line">  <span class="comment">// do some chart drawing</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">drawChart</span>()</span><br><span class="line"><span class="title function_">drawChart</span>(&#123; <span class="attr">size</span>: <span class="string">&#x27;small&#x27;</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a><code>forEach</code></h3><p>数组的<code>forEach</code>函数也是一个典型的使用场景。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Using forEach</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">entries</span>(note).<span class="title function_">forEach</span>(<span class="function">(<span class="params">[key, value]</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;key&#125;</span>: <span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="多返回值"><a href="#多返回值" class="headerlink" title="多返回值"></a>多返回值</h3><p>Javascript 函数只能返回一个值，但是可以返回数组或者对象包含多个值，配合解构语法可以方便的拿到单个数据。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">mousePosition</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> [x, y]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> [x, y] = <span class="title function_">mousePosition</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="正则匹配"><a href="#正则匹配" class="headerlink" title="正则匹配"></a>正则匹配</h3><p>正则表达式匹配返回类数组对象，配合数组解构使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">parseProtocol</span>(<span class="params">url</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> parsedURL = <span class="regexp">/^(\w+)\:\/\/([^\/]+)\/(.*)$/</span>.<span class="title function_">exec</span>(url)</span><br><span class="line">  <span class="keyword">if</span> (!parsedURL) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(parsedURL)</span><br><span class="line">  <span class="comment">// [&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript&quot;,</span></span><br><span class="line">  <span class="comment">// &quot;https&quot;, &quot;developer.mozilla.org&quot;, &quot;en-US/docs/Web/JavaScript&quot;]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [, protocol, fullhost, fullpath] = parsedURL</span><br><span class="line">  <span class="keyword">return</span> protocol</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其余元素"><a href="#其余元素" class="headerlink" title="其余元素"></a>其余元素</h3><p>函数参数和数组解构语法形式一样可以组合使用其余元素和对象解构语法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">test</span>(<span class="params">...&#123; length &#125;</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(length)</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">test</span>(<span class="number">1</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="for-of-循环"><a href="#for-of-循环" class="headerlink" title="for-of 循环"></a>for-of 循环</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for loop destructuring binding</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> [key, value] <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(note)) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;key&#125;</span>: <span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// for loop destructuring assignment</span></span><br><span class="line"><span class="keyword">for</span> ([a, b] <span class="keyword">of</span> [</span><br><span class="line">  [<span class="number">1</span>, <span class="number">2</span>],</span><br><span class="line">  [<span class="number">3</span>, <span class="number">4</span>],</span><br><span class="line">]) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(a, b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Catch-语句"><a href="#Catch-语句" class="headerlink" title="Catch 语句"></a>Catch 语句</h2><p>try 语句的 Catch 分支中也可以定义变量或者使用解构形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (&#123; message &#125;) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(message)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解构绑定与赋值"><a href="#解构绑定与赋值" class="headerlink" title="解构绑定与赋值"></a>解构绑定与赋值</h2><p>解构语法分为<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-destructuring-binding-patterns">解构绑定模式（Destructuring Binding Patterns）</a>和<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">解构赋值（Destructuring Assignment）</a>两大类，二者的写法基本一致，但语义有所不同。解构绑定模式会<strong>声明新变量</strong>，也就是创建标识符绑定（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#prod-BindingIdentifier">Binding Identifier</a>）；解构赋值会对已有的变量进行<strong>赋值</strong>。</p>
+<h3 id="解构绑定"><a href="#解构绑定" class="headerlink" title="解构绑定"></a>解构绑定</h3><p>解构绑定模式用来定义变量，可能出现变量声明、for 循环语句、函数参数等处。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 变量声明语句 VariableDeclarator</span></span><br><span class="line"><span class="keyword">const</span> &#123; firstName, lastName &#125; = person</span><br><span class="line"></span><br><span class="line"><span class="comment">// for-of 语句也可以包含变量声明</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> &#123; firstName, lastName &#125; <span class="keyword">of</span> persons) &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数定义参数部分，为函数声明局部变量，机制和变量声明语句类似</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">print</span>(<span class="params">&#123; firstName, lastName &#125;</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解构绑定模式定义了变量，所以也遵循变量声明的规则，重复声明变量属于语法错误。</p>
+<p>例如在一个解构绑定中声明多个同名变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">firstName</span>: <span class="string">&#x27;Jackie&#x27;</span>,</span><br><span class="line">  <span class="attr">lastName</span>: <span class="string">&#x27;Chen&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught SyntaxError: Identifier &#x27;firstName&#x27; has already been declared</span></span><br><span class="line"><span class="keyword">const</span> &#123; firstName, firstName &#125; = person</span><br></pre></td></tr></table></figure>
+
+<p>或者在解构绑定中声明已经存在的变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">firstName</span>: <span class="string">&#x27;Jackie&#x27;</span>,</span><br><span class="line">  <span class="attr">lastName</span>: <span class="string">&#x27;Chen&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> firstName</span><br><span class="line"></span><br><span class="line"><span class="comment">// Uncaught SyntaxError: Identifier &#x27;firstName&#x27; has already been declared</span></span><br><span class="line"><span class="keyword">const</span> &#123; firstName &#125; = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另外解构绑定是从目标值中提取属性来声明变量，缺少目标值的话也属于语法错误。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Uncaught SyntaxError: Missing initializer in destructuring declaration</span></span><br><span class="line"><span class="keyword">let</span> &#123; firstName, lastName &#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h3><p>解构赋值是表达式，可以出现在任意赋值语句的左侧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> firstName,</span><br><span class="line">  lastName</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 赋值语句 AssignmentExpression</span></span><br><span class="line">;(&#123; firstName, lastName &#125; = person)</span><br><span class="line"></span><br><span class="line"><span class="comment">// for-of 语句也可以使用赋值形式</span></span><br><span class="line"><span class="keyword">for</span> (&#123; firstName, lastName &#125; <span class="keyword">of</span> persons) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意这里解构赋值语句需要用括号对包裹起来，形成表达式语句，花括号对开头的语句会被识别为块语句而不是解构赋值表达式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解构赋值形式的语法陷阱，直接使用花括号对会被识别为块语句，可以使用括号对包裹，强制为表达式</span></span><br><span class="line"><span class="keyword">let</span> prop</span><br><span class="line">assert.<span class="title function_">throws</span>(<span class="function">() =&gt;</span> <span class="built_in">eval</span>(<span class="string">&quot;&#123;prop&#125; = &#123; prop: &#x27;hello&#x27; &#125;;&quot;</span>), &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;SyntaxError&#x27;</span>,</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;Unexpected token &#x27;=&#x27;&quot;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了<code>eval</code>函数，因为这属于编译期语法错误，无法正常的直接运行，<code>eval</code>将编译期错误转换为运行时错误，配合测试代码正常运行。</p>
+<p>解构绑定中要求名称不能出现重复，属于变量定义本身的语法要求。解构赋值不要求名称唯一，可以出现重复。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">;[a = <span class="number">2</span>, a = <span class="number">3</span>] = [a]</span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a)</span><br></pre></td></tr></table></figure>
+
+<p>但是赋值语义要求赋值表达式左侧的形式必须是左值表达式（LeftHandSideExpression），而且是合法的赋值目标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123; <span class="attr">b</span>: <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line">[a, a.<span class="property">b</span>] = [<span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// a()是左值表达式，但不是合法赋值目标</span></span><br><span class="line">[ <span class="title function_">a</span>() ] = [<span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="语法差异"><a href="#语法差异" class="headerlink" title="语法差异"></a>语法差异</h3><p>解构绑定语法和解构赋值语法除了使用的位置不同，其本身都支持对象解构、数组解构、默认值、其余元素属性、嵌套支持等特性，二者的语法定义是非常类似的。</p>
+<p>差别在于解构绑定的语义是定义变量，所以递归语法定义的出口是绑定标识符（Binding Identifier），因为变量的定义是用某个值来初始化某个名字。但是解构赋值的语义是把某个值赋值给某个左值（LeftHandSideExpression），标识符代表的变量只是左值的一种形式，还有成员表达式等很多表达式都是合法的左值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">b</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a.b是一个左值，所以可以使用在解构赋值形式中</span></span><br><span class="line">;[a.<span class="property">b</span>] = [<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;a: &#x27;</span>, a)</span><br></pre></td></tr></table></figure>
+
+<p>左值形式使用在解构绑定形式中是错误的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// syntax error</span></span><br><span class="line"><span class="keyword">const</span> [a.<span class="property">b</span>] = [<span class="number">2</span>];</span><br></pre></td></tr></table></figure>
+
+<h1 id="展开语法（Spread-Syntax）"><a href="#展开语法（Spread-Syntax）" class="headerlink" title="展开语法（Spread Syntax）"></a>展开语法（Spread Syntax）</h1><p>展开语法和解构中的其余元素都使用<code>...</code>的形式，二者都是特殊语法形式，不是表达式。其余元素是将多个属性或者值收集到一个值中，展开语法正好相反。</p>
+<p>展开语法在同一个表达式中可以使用多次，而且不要求在最后一个，而且只能出现在三个固定的语法解构中。</p>
+<h2 id="对象初始化"><a href="#对象初始化" class="headerlink" title="对象初始化"></a>对象初始化</h2><p>用在对象初始化表达式（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-object-initializer">Object Initializer</a>）中方便地拷贝对象、扩展对象、合并两个对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明式</span></span><br><span class="line"><span class="keyword">let</span> newObj = &#123; a, ...b &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 命令式 等价形式</span></span><br><span class="line"><span class="keyword">let</span> newObj = <span class="title class_">Object</span>.<span class="title function_">assign</span>(a, b)</span><br></pre></td></tr></table></figure>
+
+<h3 id="与Object-assign的异同"><a href="#与Object-assign的异同" class="headerlink" title="与Object.assign的异同"></a>与<code>Object.assign</code>的异同</h3><p>目标对象被展开或者使用<code>Object.assign</code>创建新对象时，二者都使用<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/abstract-operations.html#sec-get-o-p">Get</a>操作来获取对象属性值，因此定义了 get 属性的对象得到的结果是 get 属性求值结果而不是 get 属性本身。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> original = &#123;</span><br><span class="line">  <span class="keyword">get</span> <span class="title function_">foo</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">123</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123; foo: 123 &#125;</span></span><br><span class="line"><span class="keyword">const</span> spread = &#123; ...original &#125;</span><br><span class="line"><span class="comment">// &#123; foo: 123 &#125;</span></span><br><span class="line"><span class="keyword">const</span> assign = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, original)</span><br></pre></td></tr></table></figure>
+
+<p>展开语法和<code>Object.assign</code>都值处理对象的可枚举属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proto = &#123;</span><br><span class="line">    <span class="attr">inheritedEnumerable</span>: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> obj = <span class="title class_">Object</span>.<span class="title function_">create</span>(proto, &#123;</span><br><span class="line">    <span class="attr">ownEnumerable</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">2</span>,</span><br><span class="line">        <span class="attr">enumerable</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">ownNonEnumerable</span>: &#123;</span><br><span class="line">        <span class="attr">value</span>: <span class="number">3</span>,</span><br><span class="line">        <span class="attr">enumerable</span>: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123; ownEnumerable: 2 &#125;</span></span><br><span class="line">&#123;...obj&#125;</span><br><span class="line"><span class="comment">// &#123; ownEnumerable: 2 &#125;</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj)</span><br></pre></td></tr></table></figure>
+
+<p>展开语法和<code>Object.assign</code>语意上的差别在于展开语法使用<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-defineownproperty-p-desc">Define</a>语义定义属性，<code>Object.assign</code>使用<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-ordinary-object-internal-methods-and-internal-slots-set-p-v-receiver">Set</a>语义设置属性，二者的区别可以参考<a target="_blank" rel="noopener" href="https://2ality.com/2016/10/rest-spread-properties.html#spreading-objects-versus-object.assign()">Spreading objects versus Object.assign()</a>。</p>
+<h3 id="属性顺序问题"><a href="#属性顺序问题" class="headerlink" title="属性顺序问题"></a>属性顺序问题</h3><p>对象初始化中可以出现多个展开，因此先后顺序有影响，后展开的属性会覆盖之前同名的属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">foo</span>: <span class="number">1</span>, <span class="attr">bar</span>: <span class="number">2</span>, <span class="attr">baz</span>: <span class="number">3</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123; foo: true, bar: 2, baz: 3 &#125;</span></span><br><span class="line">&#123;...obj, <span class="attr">foo</span>: <span class="literal">true</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123; foo: true, bar: 2, baz: 3 &#125;</span></span><br><span class="line">&#123;<span class="attr">foo</span>: <span class="literal">true</span>, ...obj&#125;</span><br></pre></td></tr></table></figure>
+
+<p>即使多个展开之间不存在同名属性情况，对象本身也记录了属性的顺序，字符串属性是按照<strong>插入顺序</strong>（Insertion Order）存储的，<code>for-in</code>属性遍历和<code>Object.keys</code>遵循相同的顺序。</p>
+<h2 id="数组初始化"><a href="#数组初始化" class="headerlink" title="数组初始化"></a>数组初始化</h2><p>用在数组初始化表达式（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-array-initializer">Array Initializer</a>）中创建新的数组，比使用<code>concat/push/shift</code>等函数创建新数组更方便。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> array = [a, ...b, c, ...d]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 展开字符串</span></span><br><span class="line"><span class="keyword">const</span> string = <span class="string">&#x27;hello&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> stringArray = [...string]</span><br></pre></td></tr></table></figure>
+
+<h2 id="实参列表"><a href="#实参列表" class="headerlink" title="实参列表"></a>实参列表</h2><p>用在函数调用表达式的参数列表（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-runtime-semantics-argumentlistevaluation">Argument List Evaluation</a>）中，可以替换<code>apply</code>函数的使用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数调用位置</span></span><br><span class="line"><span class="title function_">multiply</span>(...a)</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">multiply</span>(<span class="params">a, b, c</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a * b * c</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="title function_">multiply</span>(...numbers)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价形式</span></span><br><span class="line">multiply.<span class="title function_">apply</span>(<span class="literal">null</span>, numbers)</span><br></pre></td></tr></table></figure>
+
+<p>对于构造函数调用无法使用<code>apply</code>函数，只能使用展开语法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> dateFields = [<span class="number">1970</span>, <span class="number">0</span>, <span class="number">1</span>] <span class="comment">// 1 Jan 1970</span></span><br><span class="line"><span class="keyword">let</span> d = <span class="keyword">new</span> <span class="title class_">Date</span>(...dateFields)</span><br></pre></td></tr></table></figure>
+
+<h2 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h2><p>使用扩展语法进行对象拷贝是浅拷贝，和使用<code>Object.assign</code>的效果相同。如果存在多层嵌套的对象或者数组，嵌套的属性或者元素是多个拷贝共享的，这可能造成预期之外的问题。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]</span><br><span class="line"><span class="keyword">let</span> b = [...a]</span><br><span class="line"></span><br><span class="line">b.<span class="title function_">shift</span>().<span class="title function_">shift</span>()</span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Oh no!  Now array &#x27;a&#x27; is affected as well:</span></span><br><span class="line">a</span><br><span class="line"><span class="comment">//  [[], [2], [3]]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="可展开对象"><a href="#可展开对象" class="headerlink" title="可展开对象"></a>可展开对象</h2><p>对象扩展语法中 null 和 undefined 被忽略而不是报错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;...<span class="literal">undefined</span>&#125;</span><br><span class="line">&#123;...<span class="literal">null</span>&#125;</span><br><span class="line">&#123;...<span class="number">0</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组中的展开元素要求被展开的值是 Iterable，否则会报错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123; <span class="attr">key1</span>: <span class="string">&#x27;value1&#x27;</span> &#125;</span><br><span class="line"><span class="keyword">let</span> array = [...obj] <span class="comment">// TypeError: obj is not iterable</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="规范解读"><a href="#规范解读" class="headerlink" title="规范解读"></a>规范解读</h1><h2 id="解构绑定模式"><a href="#解构绑定模式" class="headerlink" title="解构绑定模式"></a>解构绑定模式</h2><p>解构绑定的语法分别定义在变量声明、函数参数、<code>for-in</code>语句、<code>catch</code>语句等可以使用的语法位置，参考变量定义语句处的语法定义（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-destructuring-binding-patterns">Destructuring Binding Patterns</a>）即可。</p>
+<h3 id="递归定义"><a href="#递归定义" class="headerlink" title="递归定义"></a>递归定义</h3><p>绑定模式（BindingPattern）的分为对象绑定（ObjectBindingPattern）和数组绑定模式（ArrayBindingPattern）两种。</p>
+<p>对象绑定模式中包括属性列表（BindingPropertyList）和其余属性（BindingRestProperty），属性列表由若干个单独的属性（BindingProperty）组成。单个属性有单名称绑定（SingleNameBinding）和键值对（PropertyName: BindingElement）的形式。其中绑定元素（BindingElement）和数组绑定语法使用的形式，这个定义使得对象绑定能够<strong>嵌套</strong>数组绑定形式。</p>
+<p>数组绑定中包含绑定元素列表（BindingElementList）、可忽略元素（Elision）和其余元素（RestBindingElement）。</p>
+<ol>
+<li>绑定元素列表有若干个绑定元素组成，绑定元素包括单名称绑定（SingleNameBinding）和绑定模式（BidingPattern Initializer）形式，这里的<strong>嵌套定义</strong>使得数组绑定可以嵌套使用数组或者对象绑定形式。</li>
+<li>可忽略元素代表单个逗号，表示忽略数组中的某个元素。</li>
+<li>其余元素绑定有两种形式，绑定标识符（…BindingIdentifier）和绑定模式（…BindingPattern），这里的嵌套定义又使得其余元素可以嵌套的使用任意的绑定模式。</li>
+</ol>
+<h3 id="递归求值"><a href="#递归求值" class="headerlink" title="递归求值"></a>递归求值</h3><p>绑定的求值过程和绑定模式的定义解构对应，都是递归形式，整个求值过程就是递归的找到对应的对象属性或者数组元素，进行求值，然后使用名称和值的对在当前的语法环境（EnvironmentRecord）中定义变量。</p>
+<p>绑定初始化（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-runtime-semantics-bindinginitialization">BindingInitialization</a>）代表了绑定模式的整个初始化过程。首先会将绑定目标值转换为对象（RequireObjectCoercible），不能转换为对象的值会在运行时报错。属性绑定初始化（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-destructuring-binding-patterns-runtime-semantics-propertybindinginitialization">PropertyBindingInitialization</a>）对应绑定属性列表的初始化，然后进入到单个属性的初始化过程（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-runtime-semantics-keyedbindinginitialization">KeyedBindingInitialization</a>）。<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-destructuring-binding-patterns-runtime-semantics-restbindinginitialization">RestBindingInitialization</a> 处理对象其余属性的绑定，首先创建一个全新的对象，然后使用（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-copydataproperties">CopyDataProperties</a>）操作将被解构对象的<strong>可枚举属性</strong>拷贝到新的对象上，被拷贝的对象属性排除了绑定模式的绑定名称（BoundNames）语义记录的名称列表。</p>
+<p>对于数组模式来说绑定初始化会进入迭代器绑定初始化（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-runtime-semantics-iteratorbindinginitialization">IteratorBindingInitialization</a>）的过程。首先会从被解构的目标获取迭代器，所以不可迭代的对象运行时会报错。对于数组中的每个元素进行初始化的过程会造成迭代器向前一步，如果元素嵌套了其他绑定模式，会再次进入绑定初始化过程。数组中其余元素的绑定会创建一个新数组，然后将迭代器中的剩余元素逐个添加到新数组中。</p>
+<h2 id="解构赋值-1"><a href="#解构赋值-1" class="headerlink" title="解构赋值"></a>解构赋值</h2><p>解构赋值的语法定义和解构绑定类似，区别在于一个使用术语绑定（Binding），一个使用术语赋值（Assignment），这也是二者的运行时语义上的差别。</p>
+<p>需要注意的是赋值的语义要求被赋值目标形式合法，可以参考这个问题 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/62710902/are-function-calls-with-arguments-valid-left-hand-side-expressions-according-to">Are function calls with arguments valid left-Hand-Side-Expressions according to ECMAScript</a>。</p>
+<p>简单的说就是只有左值才能作为合法的赋值目标，标准中规定了 LeftHandSideExpression 来表示能够出现在赋值语句左边的形式，但是其中有些形式运行时语义上也无法正确赋值，因此有赋值目标类型的概念（ <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-static-semantics-assignmenttargettype">AssignmentTargetType</a>），将 LeftHandSideExpression 的所有可能类型进行划分，能够正确赋值的形式的赋值目标类型为简单（simple），不能正确赋值的形式的赋值目标类型为非法（invalid）。</p>
+<h2 id="展开语法"><a href="#展开语法" class="headerlink" title="展开语法"></a>展开语法</h2><p>对象初始化（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-object-initializer">Object Initializer</a>）中展开语法的属性定义求值过程在属性定义求值（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-runtime-semantics-propertydefinitionevaluation">PropertyDefinitionEvaluation</a>）中，同样使用<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/abstract-operations.html#sec-copydataproperties">CopyDataProperties</a>将被展开值的属性拷贝定义到目标对象上。</p>
+<p>数组初始化语法中的展开元素（Spread Element）处理由<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-runtime-semantics-arrayaccumulation">ArrayAccumulation</a>过程规定，被展开的元素也必须满足迭代器协议，通过迭代过程将下标和元素的键值对拷贝定义到新的数组中。</p>
+<p>调用表达式参数列表（<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-runtime-semantics-argumentlistevaluation">Argument List Evaluation</a>）中的求值过程和数组初始化语法中类似。</p>
+<h1 id="问题与练习"><a href="#问题与练习" class="headerlink" title="问题与练习 "></a>问题与练习 <span id="quiz"></span></h1><ol>
+<li>对象解构的目标值是<code>null</code>或者<code>undefined</code>时会发生什么？满足什么条件的值可以数组解构？</li>
+<li>对象解构中被解构对象的所有属性值都会被解构么？原型对象上的属性么会被解构么？</li>
+<li>解构语法中没有匹配的属性或者元素时如何处理？</li>
+<li>解构语法中什么情况下会使用指定的默认值？</li>
+<li>解构绑定和解构赋值的语法有哪些相同和差异的地方？</li>
+<li>解构绑定和解构赋值的运行时语义上相同么？</li>
+<li>解构语法支持对象、数组以及互相嵌套的形式，但是数组语法中使用其余元素时并不对称，为什么这样设计？</li>
+<li>展开语法<code>&#123;...null&#125;</code>和<code>&#123;...undefined&#125;</code>运行结果如何？</li>
+<li>展开语法会展开目标对象的所有属性么？</li>
+<li>使用解构和展开语法实现对象拷贝是深拷贝还是浅拷贝？</li>
+<li>展开语法不能拷贝哪些属性？</li>
+<li>展开语法和<code>Object.assign</code>进行属性拷贝时有哪些相同和差异的地方？</li>
+</ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><h2 id="解构（Destructuring）"><a href="#解构（Destructuring）" class="headerlink" title="解构（Destructuring）"></a>解构（Destructuring）</h2><p>下面几个资料介绍了解构语法的用法，其内容都包含在本文中，感兴趣可以进行阅读。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.digitalocean.com/community/tutorials/understanding-destructuring-rest-parameters-and-spread-syntax-in-javascript">Understanding Destructuring, Rest Parameters, and Spread Syntax in JavaScript</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring Assignment</a></li>
+<li><a target="_blank" rel="noopener" href="https://2ality.com/2015/01/es6-destructuring.html">Destructuring and parameter handling in ECMAScript 6</a></li>
+<li><a target="_blank" rel="noopener" href="https://exploringjs.com/impatient-js/ch_destructuring.html">JavaScript for impatient programmers Chapter 37 Destructuring</a></li>
+<li><a target="_blank" rel="noopener" href="https://exploringjs.com/impatient-js/ch_callables.html#parameter-handling">JavaScript for impatient programmers Chapter 25.6 Parameter Handling</a></li>
+<li><a target="_blank" rel="noopener" href="https://hacks.mozilla.org/2015/05/es6-in-depth-destructuring/">ES6 In Depth: Destructuring</a></li>
+<li>《Understanding ECMAScript 6》Chapter 5 Destructuring for Easier Data Access</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Rest.md">Object Rest Properties for ECMAScript</a>是对象其余属性的语法提案，已经进入正式的 ECMAScript 2018 规范中。</p>
+<p>ECMAScript 规范中关于解构绑定、解构赋值、展开语法等特性的规定参考以下章节。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-runtime-semantics-bindinginitialization">Binding Initialization</a></li>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-destructuring-binding-patterns">Destructuring Binding Patterns</a></li>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-destructuring-assignment">Destructuring Assignment</a>。</li>
+<li><a target="_blank" rel="noopener" href="https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-parameter-lists">Parameter List</a></li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://eslint.org/docs/rules/prefer-destructuring">prefer-destructuring</a>是 ESLint 中关于解构的规则。</p>
+<h2 id="展开（Spread）"><a href="#展开（Spread）" class="headerlink" title="展开（Spread）"></a>展开（Spread）</h2><p>展开语法的介绍可以首先参考 MDN 文档 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">Spread Syntax</a>和<a target="_blank" rel="noopener" href="https://2ality.com/2016/10/rest-spread-properties.html#spreading-objects-versus-objectassign">ES2018: Rest/Spread Properties</a>的介绍。</p>
+<p>对象其余属性（Rest Property）和展开属性（Spread Property）的语法提案<a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-object-rest-spread">Object Rest/Spread Properties for ECMAScript</a>，其中分别对<a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Rest.md">Rest</a>和<a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Spread.md">Spread</a>做说明，关于语法的各种使用情况的例子可以作为准确参考。</p>
+<p>其余元素（Rest Element）和其余属性（Rest Property）分别对应数组解构和对象解构，可以参考解构部分的规范描述。</p>
+<p>Babel 对于展开语法的转换实现在插件<a target="_blank" rel="noopener" href="https://babel.dev/docs/en/babel-plugin-proposal-object-rest-spread">@babel/plugin-proposal-object-rest-spread</a>中。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%A7%A3%E6%9E%84/" rel="tag"># 解构</a>
+              <a href="/tags/%E5%B1%95%E5%BC%80/" rel="tag"># 展开</a>
+              <a href="/tags/ES6/" rel="tag"># ES6</a>
+              <a href="/tags/ECMAScript/" rel="tag"># ECMAScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/23/babel/advanced/ast/" rel="prev" title="抽象语法树">
+      <i class="fa fa-chevron-left"></i> 抽象语法树
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">解构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%95%E5%85%A5%E8%A7%A3%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">为什么引入解构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E8%A7%A3%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">对象解构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E8%A7%A3%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">数组解构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E8%A7%A3%E6%9E%84"><span class="nav-number">1.4.</span> <span class="nav-text">嵌套解构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.</span> <span class="nav-text">未匹配模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-number">1.6.</span> <span class="nav-text">默认值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BD%99%E5%85%83%E7%B4%A0-%E5%B1%9E%E6%80%A7%EF%BC%88Rest-Element-Property%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">其余元素&#x2F;属性（Rest Element&#x2F;Property）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="nav-number">1.8.</span> <span class="nav-text">函数参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0"><span class="nav-number">1.8.1.</span> <span class="nav-text">命名参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#forEach"><span class="nav-number">1.8.2.</span> <span class="nav-text">forEach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">1.8.3.</span> <span class="nav-text">多返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D"><span class="nav-number">1.8.4.</span> <span class="nav-text">正则匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BD%99%E5%85%83%E7%B4%A0"><span class="nav-number">1.8.5.</span> <span class="nav-text">其余元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for-of-%E5%BE%AA%E7%8E%AF"><span class="nav-number">1.9.</span> <span class="nav-text">for-of 循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Catch-%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.10.</span> <span class="nav-text">Catch 语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%B5%8B%E5%80%BC"><span class="nav-number">1.11.</span> <span class="nav-text">解构绑定与赋值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E7%BB%91%E5%AE%9A"><span class="nav-number">1.11.1.</span> <span class="nav-text">解构绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC"><span class="nav-number">1.11.2.</span> <span class="nav-text">解构赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%B7%AE%E5%BC%82"><span class="nav-number">1.11.3.</span> <span class="nav-text">语法差异</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%95%E5%BC%80%E8%AF%AD%E6%B3%95%EF%BC%88Spread-Syntax%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">展开语法（Spread Syntax）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">对象初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8EObject-assign%E7%9A%84%E5%BC%82%E5%90%8C"><span class="nav-number">2.1.1.</span> <span class="nav-text">与Object.assign的异同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.</span> <span class="nav-text">属性顺序问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">数组初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E5%8F%82%E5%88%97%E8%A1%A8"><span class="nav-number">2.3.</span> <span class="nav-text">实参列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">2.4.</span> <span class="nav-text">浅拷贝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E5%B1%95%E5%BC%80%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.5.</span> <span class="nav-text">可展开对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%84%E8%8C%83%E8%A7%A3%E8%AF%BB"><span class="nav-number">3.</span> <span class="nav-text">规范解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E7%BB%91%E5%AE%9A%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">解构绑定模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">递归定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%B1%82%E5%80%BC"><span class="nav-number">3.1.2.</span> <span class="nav-text">递归求值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC-1"><span class="nav-number">3.2.</span> <span class="nav-text">解构赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%95%E5%BC%80%E8%AF%AD%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">展开语法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%8E%E7%BB%83%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">问题与练习 </span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%EF%BC%88Destructuring%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">解构（Destructuring）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%95%E5%BC%80%EF%BC%88Spread%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">展开（Spread）</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">penghui</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/marked42" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;marked42" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:penghui.zhang@foxmail.com" title="E-Mail → mailto:penghui.zhang@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">penghui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">22k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">20 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
