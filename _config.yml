@@ -38,6 +38,12 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
 
+excerpt:
+  depth: 2  #按层来算，也就是按代码块来算
+  excerpt_excludes: []
+  more_excludes: []
+  hideWholePostExcerpts: true
+
 # Writing
 new_post_name: :title.md # File name of new posts
 default_layout: post
