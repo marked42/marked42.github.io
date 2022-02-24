@@ -36,7 +36,7 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
-skip_render:
+skip_render: encoding.md
 
 excerpt:
   depth: 2  #按层来算，也就是按代码块来算

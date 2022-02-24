@@ -1,6 +1,8 @@
 ---
 title: 解构与展开
 date: { { date } }
+category:
+  - 深入理解Javascript
 tags:
   - 解构
   - 展开
