@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>解构与展开</title>
-    <url>/2022/02/24/js/destructuring-spread/</url>
+    <url>/2022/02/25/js/destructuring-spread/</url>
     <content><![CDATA[<p>ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。</p>
 <p>如果你对相关内容非常熟悉，不妨直接跳到<a href="#quiz">习题部分</a>，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。</p>
 <h1 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h1><h2 id="为什么引入解构"><a href="#为什么引入解构" class="headerlink" title="为什么引入解构"></a>为什么引入解构</h2><p>ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。</p>
@@ -236,7 +236,7 @@
   </entry>
   <entry>
     <title>抽象语法树</title>
-    <url>/2022/02/24/babel/advanced/ast/</url>
+    <url>/2022/02/25/babel/advanced/ast/</url>
     <content><![CDATA[<p>Javascript 代码经过解析得到抽象语法树（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree），用来表示程序源码结构。</p>
 <p>前端基础工具 Babel、ESLint、Prettier 等使用的 Javascript 抽象语法树最早是火狐的工程师开发 SpiderMonkey 引擎时使用的格式，后来发展为统一的<a href="https://github.com/estree/estree">ESTree 规范</a>，包含 ECMAScript 规范各版本对应的抽象语法树文档和一些废弃或者是提案语法的文档。</p>
 <p>Babel 使用的抽象语法树规范参考<a href="https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md">官方文档</a>。抽象语法树规范主要描述每种语法特性的树节点，主要包括文件（File）、程序（Program）、语句（Statement）、声明（Declaration）、表达式（Expression）和其他杂项类型。</p>
