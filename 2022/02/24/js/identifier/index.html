@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"marked42.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="小测试下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中什么是合法变量名？（WIP）">
+<meta property="og:url" content="http://marked42.github.io/2022/02/24/js/identifier/index.html">
+<meta property="og:site_name" content="Epiphany">
+<meta property="og:description" content="小测试下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://marked42.github.io/images/reserved-word-keyword.jpeg">
+<meta property="article:published_time" content="2022-02-24T21:19:04.000Z">
+<meta property="article:modified_time" content="2022-02-26T10:09:18.698Z">
+<meta property="article:author" content="penghui">
+<meta property="article:tag" content="Identifier">
+<meta property="article:tag" content="ECMAScript">
+<meta property="article:tag" content="IdentifierName">
+<meta property="article:tag" content="标识符名称">
+<meta property="article:tag" content="标识符">
+<meta property="article:tag" content="ReservedWord">
+<meta property="article:tag" content="保留字">
+<meta property="article:tag" content="Keyword">
+<meta property="article:tag" content="关键字">
+<meta property="article:tag" content="Unicode">
+<meta property="article:tag" content="Babel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://marked42.github.io/images/reserved-word-keyword.jpeg">
+
+<link rel="canonical" href="http://marked42.github.io/2022/02/24/js/identifier/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Javascript中什么是合法变量名？（WIP） | Epiphany</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Epiphany</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">17</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">3</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/marked42" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://marked42.github.io/2022/02/24/js/identifier/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="penghui">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Epiphany">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript中什么是合法变量名？（WIP）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-24 21:19:04" itemprop="dateCreated datePublished" datetime="2022-02-24T21:19:04+00:00">2022-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-26 10:09:18" itemprop="dateModified" datetime="2022-02-26T10:09:18+00:00">2022-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Javascript/" itemprop="url" rel="index"><span itemprop="name">深入理解Javascript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="小测试"><a href="#小测试" class="headerlink" title="小测试"></a>小测试</h1><p>下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>原因在于 Javascript 和 C 语言对于什么是合法的变量名称规定不同。本文以 ECMAScript 规范的内容为依据，对这个问题做个探讨。文中使用了标识符名称（IdentifierName）、标识符（Identifier）、保留字（ReservedWord）、关键字（Identifier）等规范中的概念，提示大家在阅读的过程中需要注意这些概念之间的联系和区别，否则容易混淆。</p>
+<h1 id="名称"><a href="#名称" class="headerlink" title="名称"></a>名称</h1><h2 id="合法形式"><a href="#合法形式" class="headerlink" title="合法形式"></a>合法形式</h2><p>Javascript 引擎对代码进行处理时，首先在编译阶段进行分词操作，将源码划分为不同的种类的单词（Token），然后使用单词流作为后续解析的输入。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">test1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码中有几类分词：</p>
+<ol>
+<li>数字 <code>1</code></li>
+<li><strong>标识符（Identifier）</strong> <code>test1</code>/<code>a</code></li>
+<li><strong>保留字（ReservedWord）</strong><code>function</code>/<code>let</code></li>
+<li>空白与标点符号</li>
+</ol>
+<p>函数和变量等位置使用的是标识符类型的 Token，可以由数字、字母组成，另外为了不与数字冲突所以规定标识符不能以数字开头。<code>function</code>/<code>let</code>等固定语法位置使用的单词形式上也符合标识符定义，但是因为用作特殊用途，所以这一类单词被划分为保留字类型。</p>
+<p>ECMAScript 规范中<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">名称与关键字</a>对名称的合法形式进行了规定，主要涉及三个概念标识符名称（IdentifierName）、标识符（Identifier）和保留字（ReservedWord）。</p>
+<ol>
+<li>标识符是指能够作为合法的变量名、函数名、类型、属性名等名称的形式</li>
+<li>保留字</li>
+<li>标识符和保留字的合法形式统称为标识符名称</li>
+</ol>
+<p>标识符名称的合法形式使用 BNF 语法规定如下。</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">IdentifierName ::</span><br><span class="line">  IdentifierStart</span><br><span class="line">  IdentifierName IdentifierPart</span><br><span class="line"></span><br><span class="line">IdentifierStart ::</span><br><span class="line">  IdentifierStartChar</span><br><span class="line">  \ UnicodeEscapeSequence</span><br><span class="line"></span><br><span class="line">IdentifierPart ::</span><br><span class="line">  IdentifierPartChar</span><br><span class="line">  \ UnicodeEscapeSequence</span><br><span class="line"></span><br><span class="line">IdentifierStartChar ::</span><br><span class="line">  UnicodeIDStart</span><br><span class="line">  $</span><br><span class="line">  _</span><br><span class="line"></span><br><span class="line">IdentifierPartChar ::</span><br><span class="line">  UnicodeIDContinue</span><br><span class="line">  $</span><br><span class="line">  <span class="attribute">&lt;ZWNJ&gt;</span></span><br><span class="line">  <span class="attribute">&lt;ZWJ&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>关键的含义有两点。</p>
+<ol>
+<li>标识符名称的首字母必须满足 IdentifierStartChar 的规定，也就是可以使用<code>$</code>、<code>_</code>和 Unicode 中能作为名称首字母的字符（UnicodeIDStart）。</li>
+<li>标识符名称的后续字母必须满足 IdentifierPartChar 的规定，可以是<code>$</code>、<code>&lt;ZWNJ&gt;</code>、<code>&lt;ZWJ&gt;</code>和 Unicode 中能作为名称后续字母的字符（UnicodeIDContinue）。其中<code>UnicodeIDContinue</code>包含了<code>UnicodeIDStart</code>、<code>_</code>、数字和其他一些合法字符。</li>
+</ol>
+<p>也就是说后续字符包含的范围比首字符要大。</p>
+<p>Javascript 相比于 C 语言允许更多字符作为标识符</p>
+<ol>
+<li>开头允许 U+0024 (DOLLAR SIGN) and U+005F (LOW LINE)</li>
+<li>后续字符允许 U+200C (ZERO WIDTH NON-JOINER) and U+200D (ZERO WIDTH JOINER)</li>
+</ol>
+<p>这也是文章开头为什么<code>$a = 1</code>在 Javascript 中合法但是在 C 语言中非法的原因。</p>
+<h2 id="中文名称"><a href="#中文名称" class="headerlink" title="中文名称"></a>中文名称</h2><p>标识符合法形式中允许使用 Unicode 码点分类 UnicodeIDStart/UnicodeIDContinue，这意味着我们可以使用中文、日文、韩文等字符作为名称。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> 姓 = <span class="string">&#x27;李&#x27;</span></span><br><span class="line"><span class="keyword">const</span> 名 = <span class="string">&#x27;白&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> 问好(姓, 名) &#123;</span><br><span class="line">  <span class="keyword">const</span> greeting = <span class="string">`你好，<span class="subst">$&#123;姓&#125;</span><span class="subst">$&#123;名&#125;</span> 🤪`</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(greeting)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 你好，李白 🤪</span></span><br><span class="line">问好(姓, 名)</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中函数名、参数名、变量名都使用了中文，是合法的形式。</p>
+<h2 id="UnicodeIDStart-和-UnicodeIDContinue"><a href="#UnicodeIDStart-和-UnicodeIDContinue" class="headerlink" title="UnicodeIDStart 和 UnicodeIDContinue"></a>UnicodeIDStart 和 UnicodeIDContinue</h2><p>完整的 UnicodeIDStart 和 UnicodeIDContinue 包含的字符可以参考<a target="_blank" rel="noopener" href="https://www.unicode.org/reports/tr31/">Unicode® Standard Annex #31</a>中 Default Identifier Syntax 的内容。</p>
+<p>Babel 对于标识符的相关实现位于<a target="_blank" rel="noopener" href="https://github.com/babel/babel/blob/main/packages/babel-helper-validator-identifier/src/identifier.ts">这里</a>，使用库<a target="_blank" rel="noopener" href="https://www.npmjs.com/package/@unicode/unicode-14.0.0">Unicode v14.0.0</a>提取合法的码点范围并生成正则表达式来检测合法名称字符。</p>
+<p>粗略来说，合法的名称字符包括了几类。</p>
+<table>
+  <tr>
+    <th>码点范围</th>
+    <th>分类</th>
+    <th>字符</th>
+  </tr>
+  <tr>
+    <td>0x00 - 0xff</td>
+    <td>ASCII 字符集</td>
+    <td>英文大写字母、小写字母、数字和几个特殊字符$、_</td>
+  </tr>
+  <tr>
+    <td>0x0100 - 0xffff</td>
+    <td>Unicode 基础平面 BMP 中的合法字符</td>
+    <td>中文、日文、韩文</td>
+  </tr>
+  <tr>
+    <td>0x01000 - 0x10ffff</td>
+    <td>Unicode 补充平面（Astral）</td>
+    <td>其他字符</td>
+  </tr>
+</table>
+
+<h2 id="转义序列"><a href="#转义序列" class="headerlink" title="转义序列"></a>转义序列</h2><p>Javascript 支持使用 Unicode 转义序列<a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-literals-string-literals">UnicodeEscapeSequence</a>来表示 Unicode 字符，方便在不能直接使用 Unicode 字符的情况下使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// \u0041 是字符&#x27;A&#x27;的转义序列</span><br><span class="line">let \u0041 = 1;</span><br><span class="line">console.log(&#x27;A: &#x27;, A)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// \u&#123;0042&#125; 是字符&#x27;B&#x27;的转义序列</span><br><span class="line">let \u&#123;0042&#125; = 2;</span><br><span class="line">console.log(&#x27;B: &#x27;, B)</span><br></pre></td></tr></table></figure>
+
+<p>上面使用了 Unicode 转义序列的两种形式分别定义了变量 A 和 B，<code>\uxxxx</code>的形式只能表示 Unicode 中基本平面的字符，<code>\u&#123;xxxxxx&#125;</code>的形式能表示 Unicode 中的所有字符，完整的定义如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">UnicodeEscapeSequence ::</span><br><span class="line">  u Hex4Digits</span><br><span class="line">  u&#123; CodePoint &#125;</span><br><span class="line"></span><br><span class="line">Hex4Digits ::</span><br><span class="line">  HexDigit HexDigit HexDigit HexDigit</span><br><span class="line"></span><br><span class="line">HexDigit :: one of</span><br><span class="line">  0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F</span><br><span class="line"></span><br><span class="line">CodePoint ::</span><br><span class="line">  HexDigits[~Sep] but only if MV of HexDigits ≤ 0x10FFFF</span><br></pre></td></tr></table></figure>
+
+<p>对于错误形式的转译序列，执行时在代码解析阶段就直接报错。</p>
+<p><code>\uxxxx</code>形式必须是<code>\u</code>后面跟着四个十六进制字符（HexDigit）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SyntaxError: Invalid Unicode escape sequence</span></span><br><span class="line"><span class="keyword">const</span> \uaa = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(\uaa)</span><br></pre></td></tr></table></figure>
+
+<p><code>\u&#123;xxxxxx&#125;</code>形式中括号对内也是十六进制字符，但是要求代表的码点值必须小于等于（0x10FFFF），也就是位于 Unicode 字符集规定的码点范围内。</p>
+<p>下面是几种非法的转义序列形式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误，包含了不属于十六进制字符的字符g</span></span><br><span class="line">\u&#123;1g&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误，码点范围超出Unicode字符集</span></span><br><span class="line">\u&#123;<span class="number">110000</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确，\u&#123;42&#125;是字符B的转义形式</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">42</span>&#125; = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B&#x27;</span>, \u&#123;<span class="number">42</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>转译序列除了必须形式正确外，其代表的对应码点也必须是合法的名称字符。<br>例如反撇号`本身不是合法的名称字符，那么使用转义序列的方式书写也是不正确的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// \u&#123;40&#125;是反撇号`的转义序列形式</span></span><br><span class="line"><span class="comment">// SyntaxError: Invalid or unexpected token</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">40</span>&#125; = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="码点序列语意"><a href="#码点序列语意" class="headerlink" title="码点序列语意"></a>码点序列语意</h2><p>由于允许使用 Unicode 转义序列，所以同一个名称的变量有多种写法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接书写</span></span><br><span class="line">let A = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 转译序列形式</span></span><br><span class="line"><span class="comment">// \u0041是 &#x27;A&#x27;的转义形式</span></span><br><span class="line">let \u0041 = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>Javascript 中对于标识符名称的处理都是基于码点序列，具有相同码点序列的不同写法被认为是同一个名称。在 ES6 规范中被称为 <a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-identifier-names-static-semantics-stringvalue">StringValue</a> 语意，在 ES 2022 中被称为 <a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-identifiercodepoints">IdentifierCodePoints</a> 语意，使用的术语不相同，但表达式是同一个意思。因此上面这段代码执行的话会报错，因为同一个名称’A’的变量不允许<strong>重复定义</strong>。</p>
+<p>Unicode 中代表相同字符（canonically equivalent）的标识符名称并不一定等价，除非其使用的码点序列相同，参考 <a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">ES 6 规范</a>。</p>
+<blockquote>
+<p>Two IdentifierName that are canonically equivalent according to the Unicode standard are not equal unless, after replacement of each UnicodeEscapeSequence, they are represented by the exact same sequence of code points.</p>
+</blockquote>
+<h2 id="合法名称判断"><a href="#合法名称判断" class="headerlink" title="合法名称判断"></a>合法名称判断</h2><p>通过上面的介绍我们了解了标识符名称的合法形式的定义，主要是两点。</p>
+<ol>
+<li>首字母必须合法</li>
+<li>后续字母必须合法</li>
+</ol>
+<p>看起来像是废话，但是具体实现逻辑还是有些细节的，这里我们参考<a target="_blank" rel="noopener" href="https://github.com/babel/babel/blob/main/packages/babel-helper-validator-identifier/src/identifier.ts#L85">Babel</a>的实现。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">isIdentifierName</span>(<span class="params">name: <span class="built_in">string</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> isFirst = <span class="literal">true</span></span><br><span class="line">  <span class="comment">// iterable protocol返回的是code point序列</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> char <span class="keyword">of</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(name)) &#123;</span><br><span class="line">    <span class="keyword">const</span> cp = char.<span class="title function_">codePointAt</span>(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> (isFirst) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="title function_">isIdentifierStart</span>(cp)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      isFirst = <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="title function_">isIdentifierChar</span>(cp)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// isFirst理解为状态机，包含了空串、单个字符、多个字符情况</span></span><br><span class="line">  <span class="keyword">return</span> !isFirst</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个实现中有几个关键点。</p>
+<p>第一点，接受的参数是一个字符串，需要从字符串获取其对应的 Unicode 码点序列。由于 Javascript 的字符串使用的是 UTF16 的变长编码，所以字符串获得指定下标位置字符对应码点的方法<code>codePointAt(index)</code>不能直接使用，需要增加对于代理对的检查。Babel 的实现没有包含这个检测逻辑，而是直接使用了<code>Array.from(name)</code>的形式。</p>
+<p>原因在于字符串实现了<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/@@iterator">迭代器协议</a>，得到一个字符串的迭代器，顺序返回字符串每个字符对应的码点，返回形式也是字符串，所以使用 for 循环遍历时每个字符代表一个码点，使用<code>codePointAt(0)</code>查询即可。</p>
+<p>第二点，关于首字母<code>isIdentifierStart</code>和后续字母<code>isIdentifierChar</code>的检测逻辑是前文中讲述的内容。</p>
+<p>第三点，整个检测逻辑是一个状态机的实现，<code>isFirst</code>变量可以理解为记录了状态机的匹配状态。状态机的合法结束情况是接受了至少一个字符，而且每个字符都满足对应的要求。状态机结束时函数返回<code>true</code>表示输入是合法的标识符名称。</p>
+<p>循环中单个字符非法时直接返回<code>false</code>；如果循环能正确结束表示所有字符合法，这时候还要满足至少一个字符，也就是<code>!isFirst</code>。</p>
+<h1 id="保留字和关键字"><a href="#保留字和关键字" class="headerlink" title="保留字和关键字"></a>保留字和关键字</h1><h2 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2><p>关键字（keyword）是指符合标识符名称（IdentifierName）形式，且出现在<strong>语法结构</strong>中的若干个单词形式，例如下面代码中的<code>function/if/return</code>等。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">test</span>(<span class="params">a</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (a) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大多数关键字不是合法的标识符，也就是不能出现在需要标识符的语法结构位置中，不能用作变量名、函数名、类名等。但是也有个别关键词<a href="#async-await">例外</a>。</p>
+<h2 id="保留字"><a href="#保留字" class="headerlink" title="保留字"></a>保留字</h2><p><a target="_blank" rel="noopener" href="https://262.ecma-international.org/6.0/#sec-reserved-words">保留字</a>（ReservedWord）是指<strong>标识符名称</strong>中不是<strong>标识符</strong>的其余名称。也就是说一个名称如果属于保留字，那么就不能用到变量名、函数名、类名等需要标识符的语法位置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> enum = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中<code>enum</code>是保留字，所以不能作为变量名称使用。但是有些名称作为保留字是<a href="#conditional-reserved-word">有条件的</a>，条件不满足时不是保留字，从而可以作为变量名存在。设计这种机制主要是出于兼容旧代码的考虑，规范新增保留字时，旧代码中可能存在使用新保留字作为变量的情况，为了保证旧代码在新规范下还能正常运行，保留字的触发就需要设置一定条件。</p>
+<p>ES2022 中的保留字列表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">await break case catch class const continue debugger default delete do else enum export extends false finally for function if import in instanceof new null return super switch this throw true try typeof var void while with yield</span><br></pre></td></tr></table></figure>
+
+<h2 id="名称分类"><a href="#名称分类" class="headerlink" title="名称分类"></a>名称分类</h2><p>下图中对标识符名称、标识符、关键字、保留字等概念的关系进行总结。标识符名称是最大的圈，包含了其他三个概念。保留字和标识符是两个互斥的概念，合起来等于标识符名称。关键字和保留字、标识符各有重合。</p>
+<p><img data-src="/images/reserved-word-keyword.jpeg" alt="名称分类"></p>
+<p>名称的分类可以参考<a target="_blank" rel="noopener" href="https://tc39.es/ecma262/#sec-keywords-and-reserved-words">规范</a>中的表述，其中总是<strong>可以</strong>作为标识符的名称（Math,window,toString 等）和总是<strong>不能</strong>作为标识符的名称（if/else 等）两种情况比较清楚，可以重点关注另外的三种情况<span id="conditional-reserved-word"></span>。</p>
+<ol>
+<li>某些条件下可以作为标识符的保留字 await/yield</li>
+<li>严格模式下不能作为标识符的关键字 let/static 等</li>
+<li>是关键字但不是保留字，可以作为标识符的名称 as/async 等</li>
+</ol>
+<h3 id="await"><a href="#await" class="headerlink" title="await "></a>await <span id="async-await"></span></h3><p>await 关键字模块下激活</p>
+<h3 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h3><p>严格模式下激活</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span></span><br><span class="line"><span class="keyword">private</span></span><br><span class="line"><span class="keyword">protected</span></span><br><span class="line"><span class="keyword">interface</span></span><br><span class="line">package</span><br><span class="line">implements</span><br><span class="line"></span><br><span class="line">let static</span><br><span class="line"></span><br><span class="line">// TODO: 什么时候激活为关键字</span><br><span class="line">yield</span><br><span class="line"></span><br><span class="line">// TODO: 什么是strictBinding</span><br><span class="line">eval / arguments</span><br></pre></td></tr></table></figure>
+
+<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>NullLiteral/BooleanLiteral 在规范中也属于保留字，但是分词阶段单独处理，直接解析为 NullLiteral 和 BooleanLiteral 类型的单词（Token），不会跟标识符类型（Identifier）冲突。</p>
+<p>这里 NaN/Infinity/undefined 是 identifier，</p>
+<h3 id="可以作为标识符的关键字-async"><a href="#可以作为标识符的关键字-async" class="headerlink" title="可以作为标识符的关键字 async"></a>可以作为标识符的关键字 async</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">as</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">async</span>(<span class="params"></span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>模块导入导出语法中的关键字<code>from</code>/<code>as</code>可以作为标识符使用，因此下面的代码是合法的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将模块导出到标识符from上</span></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">from</span> <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;from: &#x27;</span>, <span class="keyword">from</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="转义序列的用法差异"><a href="#转义序列的用法差异" class="headerlink" title="转义序列的用法差异"></a>转义序列的用法差异</h2><p>关键字中不能使用转义序列</p>
+<p>Keywords cannot contain escape characters.ts(1260)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Keywords cannot contain escape characters.ts(1260)</span></span><br><span class="line"><span class="comment">// \u&#123;6C&#125; 是 &#x27;l&#x27; 的转译序列</span></span><br><span class="line">\u&#123;6C&#125;et a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ES3"><a href="#ES3" class="headerlink" title="ES3"></a>ES3</h2><p>相比于 ES6 有更多的保留字</p>
+<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><ol>
+<li>解释这些概念 标识符名称、标识符、关键字、保留字，它们之间有什么联系和区别？</li>
+<li>undefined 相关<ol>
+<li><code>undefined</code>是关键字还是标识符？</li>
+<li><code>&lt;javascript src=&quot;void 0&quot;&gt;&lt;/javascript&gt;</code>中 TODO:</li>
+<li><code>undefined === void 0</code>的值总是<code>true</code>么？</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>penghui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://marked42.github.io/2022/02/24/js/identifier/" title="Javascript中什么是合法变量名？（WIP）">http://marked42.github.io/2022/02/24/js/identifier/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Identifier/" rel="tag"># Identifier</a>
+              <a href="/tags/ECMAScript/" rel="tag"># ECMAScript</a>
+              <a href="/tags/IdentifierName/" rel="tag"># IdentifierName</a>
+              <a href="/tags/%E6%A0%87%E8%AF%86%E7%AC%A6%E5%90%8D%E7%A7%B0/" rel="tag"># 标识符名称</a>
+              <a href="/tags/%E6%A0%87%E8%AF%86%E7%AC%A6/" rel="tag"># 标识符</a>
+              <a href="/tags/ReservedWord/" rel="tag"># ReservedWord</a>
+              <a href="/tags/%E4%BF%9D%E7%95%99%E5%AD%97/" rel="tag"># 保留字</a>
+              <a href="/tags/Keyword/" rel="tag"># Keyword</a>
+              <a href="/tags/%E5%85%B3%E9%94%AE%E5%AD%97/" rel="tag"># 关键字</a>
+              <a href="/tags/Unicode/" rel="tag"># Unicode</a>
+              <a href="/tags/Babel/" rel="tag"># Babel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/26/babel/advanced/ast/" rel="next" title="抽象语法树">
+      抽象语法树 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E6%B5%8B%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">小测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8D%E7%A7%B0"><span class="nav-number">2.</span> <span class="nav-text">名称</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%88%E6%B3%95%E5%BD%A2%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">合法形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E5%90%8D%E7%A7%B0"><span class="nav-number">2.2.</span> <span class="nav-text">中文名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UnicodeIDStart-%E5%92%8C-UnicodeIDContinue"><span class="nav-number">2.3.</span> <span class="nav-text">UnicodeIDStart 和 UnicodeIDContinue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E4%B9%89%E5%BA%8F%E5%88%97"><span class="nav-number">2.4.</span> <span class="nav-text">转义序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%81%E7%82%B9%E5%BA%8F%E5%88%97%E8%AF%AD%E6%84%8F"><span class="nav-number">2.5.</span> <span class="nav-text">码点序列语意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%88%E6%B3%95%E5%90%8D%E7%A7%B0%E5%88%A4%E6%96%AD"><span class="nav-number">2.6.</span> <span class="nav-text">合法名称判断</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%9D%E7%95%99%E5%AD%97%E5%92%8C%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.</span> <span class="nav-text">保留字和关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">3.1.</span> <span class="nav-text">关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E7%95%99%E5%AD%97"><span class="nav-number">3.2.</span> <span class="nav-text">保留字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8D%E7%A7%B0%E5%88%86%E7%B1%BB"><span class="nav-number">3.3.</span> <span class="nav-text">名称分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">3.3.1.</span> <span class="nav-text">await </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.3.2.</span> <span class="nav-text">严格模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97"><span class="nav-number">3.3.3.</span> <span class="nav-text">模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E4%BD%9C%E4%B8%BA%E6%A0%87%E8%AF%86%E7%AC%A6%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97-async"><span class="nav-number">3.3.4.</span> <span class="nav-text">可以作为标识符的关键字 async</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E4%B9%89%E5%BA%8F%E5%88%97%E7%9A%84%E7%94%A8%E6%B3%95%E5%B7%AE%E5%BC%82"><span class="nav-number">3.4.</span> <span class="nav-text">转义序列的用法差异</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES3"><span class="nav-number">3.5.</span> <span class="nav-text">ES3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">练习</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="penghui"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">penghui</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/marked42" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;marked42" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:penghui.zhang@foxmail.com" title="E-Mail → mailto:penghui.zhang@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">penghui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">28k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">26 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>
