@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>解构与展开</title>
-    <url>/2022/02/27/js/destructuring-spread/</url>
+    <url>/2022/02/28/js/destructuring-spread/</url>
     <content><![CDATA[<p>ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。</p>
 <p>如果你对相关内容非常熟悉，不妨直接跳到<a href="#quiz">习题部分</a>，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。</p>
 <h1 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h1><h2 id="为什么引入解构"><a href="#为什么引入解构" class="headerlink" title="为什么引入解构"></a>为什么引入解构</h2><p>ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。</p>
@@ -243,7 +243,7 @@
     <content><![CDATA[<h1 id="Javascript-vs-C"><a href="#Javascript-vs-C" class="headerlink" title="Javascript vs C"></a>Javascript vs C</h1><p>下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">$a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
-<p>原因在于 Javascript 和 C 语言对于什么是合法的变量名称规定不同。本文以 ECMAScript 规范的内容为依据，对这个问题做个探讨。文中使用了标识符名称（IdentifierName）、标识符（Identifier）、保留字（ReservedWord）、关键字（Identifier）等规范中的概念，提示大家在阅读的过程中需要注意这些概念之间的联系和区别，否则容易混淆。</p>
+<p>原因在于 Javascript 和 C 语言对于合法的变量名称规定不同。本文以 ECMAScript 规范为依据，对这个问题进行探讨。文中使用了标识符名称（IdentifierName）、标识符（Identifier）、保留字（ReservedWord）、关键字（Keyword）等规范中的概念，提示大家在阅读的过程中注意这些概念之间的联系和区别，否则容易混淆。</p>
 <h1 id="名称"><a href="#名称" class="headerlink" title="名称"></a>名称</h1><h2 id="合法形式"><a href="#合法形式" class="headerlink" title="合法形式"></a>合法形式</h2><p>Javascript 引擎对代码进行处理时，首先在编译阶段进行分词操作，将源码划分为不同的种类的单词（Token），然后使用单词流作为后续解析的输入。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">test1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -254,10 +254,10 @@
 <li><strong>保留字（ReservedWord）</strong><code>function</code>/<code>let</code></li>
 <li>空白与标点符号</li>
 </ol>
-<p>函数和变量等位置使用的是标识符类型的 Token，可以由数字、字母组成，另外为了不与数字冲突所以规定标识符不能以数字开头。<code>function</code>/<code>let</code>等固定语法位置使用的单词形式上也符合标识符定义，但是因为用作特殊用途，所以这一类单词被划分为保留字类型。</p>
-<p>ECMAScript 规范中<a href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">名称与关键字</a>对名称的合法形式进行了规定，主要涉及三个概念标识符名称（IdentifierName）、标识符（Identifier）和保留字（ReservedWord）。</p>
+<p>函数名、变量名等位置使用的是标识符类型的 Token，由数字、字母组成。另外为了不与数字冲突所以规定标识符不能以数字开头。<code>function</code>/<code>let</code>等固定语法位置使用的单词形式上也符合标识符定义，但是因为用作特殊用途，所以这一类单词被划分为保留字类型。</p>
+<p>ECMAScript 规范中<a href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">名称与关键字</a>对名称的合法形式进行规定，主要涉及三个概念标识符名称（IdentifierName）、标识符（Identifier）和保留字（ReservedWord）。</p>
 <ol>
-<li>标识符是指能够作为合法的变量名、函数名、类型、属性名等名称的形式</li>
+<li>标识符是指能够作为合法的变量名、函数名、类名、属性名等名称的形式</li>
 <li>保留字</li>
 <li>标识符和保留字的合法形式统称为标识符名称</li>
 </ol>
@@ -269,19 +269,18 @@
 <li>标识符名称的首字母必须满足 IdentifierStartChar 的规定，也就是可以使用<code>$</code>、<code>_</code>和 Unicode 中能作为名称首字母的字符（UnicodeIDStart）。</li>
 <li>标识符名称的后续字母必须满足 IdentifierPartChar 的规定，可以是<code>$</code>、<code>&lt;ZWNJ&gt;</code>、<code>&lt;ZWJ&gt;</code>和 Unicode 中能作为名称后续字母的字符（UnicodeIDContinue）。其中<code>UnicodeIDContinue</code>包含了<code>UnicodeIDStart</code>、<code>_</code>、数字和其他一些合法字符。</li>
 </ol>
-<p>也就是说后续字符包含的范围比首字符要大。</p>
-<p>Javascript 相比于 C 语言允许更多字符作为标识符</p>
+<p>也就是说后续字符包含的范围比首字符要大。Javascript 相比于 C 语言允许更多字符作为标识符</p>
 <ol>
 <li>开头允许 U+0024 (DOLLAR SIGN) and U+005F (LOW LINE)</li>
 <li>后续字符允许 U+200C (ZERO WIDTH NON-JOINER) and U+200D (ZERO WIDTH JOINER)</li>
 </ol>
-<p>这也是文章开头为什么<code>$a = 1</code>在 Javascript 中合法但是在 C 语言中非法的原因。</p>
+<p>这解释了<code>$a = 1</code>在 Javascript 中合法但是在 C 语言中非法的现象。</p>
 <h2 id="中文名称"><a href="#中文名称" class="headerlink" title="中文名称"></a>中文名称</h2><p>标识符合法形式中允许使用 Unicode 码点分类 UnicodeIDStart/UnicodeIDContinue，这意味着我们可以使用中文、日文、韩文等字符作为名称。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> 姓 = <span class="string">&#x27;李&#x27;</span></span><br><span class="line"><span class="keyword">const</span> 名 = <span class="string">&#x27;白&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> 问好(姓, 名) &#123;</span><br><span class="line">  <span class="keyword">const</span> greeting = <span class="string">`你好，<span class="subst">$&#123;姓&#125;</span><span class="subst">$&#123;名&#125;</span> 🤪`</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(greeting)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 你好，李白 🤪</span></span><br><span class="line">问好(姓, 名)</span><br></pre></td></tr></table></figure>
 
 <p>上面代码中函数名、参数名、变量名都使用了中文，是合法的形式。</p>
 <h2 id="UnicodeIDStart-和-UnicodeIDContinue"><a href="#UnicodeIDStart-和-UnicodeIDContinue" class="headerlink" title="UnicodeIDStart 和 UnicodeIDContinue"></a>UnicodeIDStart 和 UnicodeIDContinue</h2><p>完整的 UnicodeIDStart 和 UnicodeIDContinue 包含的字符可以参考<a href="https://www.unicode.org/reports/tr31/">Unicode® Standard Annex #31</a>中 Default Identifier Syntax 的内容。</p>
-<p>Babel 对于标识符的相关实现位于<a href="https://github.com/babel/babel/blob/main/packages/babel-helper-validator-identifier/src/identifier.ts">这里</a>，使用库<a href="https://www.npmjs.com/package/@unicode/unicode-14.0.0">Unicode v14.0.0</a>提取合法的码点范围并生成正则表达式来检测合法名称字符。</p>
+<p>Babel 对于标识符的相关实现位于<a href="https://github.com/babel/babel/blob/main/packages/babel-helper-validator-identifier/src/identifier.ts">这里</a>，使用<a href="https://www.npmjs.com/package/@unicode/unicode-14.0.0">Unicode v14.0.0</a>提取合法的码点范围并生成正则表达式来检测合法名称字符。</p>
 <p>粗略来说，合法的名称字符包括了几类。</p>
 <table>
   <tr>
@@ -306,32 +305,32 @@
   </tr>
 </table>
 
-<h2 id="转义序列"><a href="#转义序列" class="headerlink" title="转义序列"></a>转义序列</h2><p>Javascript 支持使用 Unicode 转义序列<a href="https://262.ecma-international.org/6.0/#sec-literals-string-literals">UnicodeEscapeSequence</a>来表示 Unicode 字符，方便在不能直接使用 Unicode 字符的情况下使用。</p>
+<h2 id="转义序列"><a href="#转义序列" class="headerlink" title="转义序列"></a>转义序列</h2><p>标识符名称支持使用 Unicode 转义序列<a href="https://262.ecma-international.org/6.0/#sec-literals-string-literals">UnicodeEscapeSequence</a>来表示 Unicode 字符，方便在不能直接使用 Unicode 字符的情况下使用。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// \u0041 是字符&#x27;A&#x27;的转义序列</span><br><span class="line">let \u0041 = 1;</span><br><span class="line">console.log(&#x27;A: &#x27;, A)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// \u&#123;0042&#125; 是字符&#x27;B&#x27;的转义序列</span><br><span class="line">let \u&#123;0042&#125; = 2;</span><br><span class="line">console.log(&#x27;B: &#x27;, B)</span><br></pre></td></tr></table></figure>
 
-<p>上面使用了 Unicode 转义序列的两种形式分别定义了变量 A 和 B，<code>\uxxxx</code>的形式只能表示 Unicode 中基本平面的字符，<code>\u&#123;xxxxxx&#125;</code>的形式能表示 Unicode 中的所有字符，完整的定义如下。</p>
+<p>上面使用了 Unicode 转义序列的两种形式分别定义了变量 A 和 B，<code>\u HexDigits</code>的形式只能表示 Unicode 中基本平面的字符，<code>\u&#123;CodePoint&#125;</code>的形式能表示 Unicode 中的所有字符，完整的定义如下。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UnicodeEscapeSequence ::</span><br><span class="line">  u Hex4Digits</span><br><span class="line">  u&#123; CodePoint &#125;</span><br><span class="line"></span><br><span class="line">Hex4Digits ::</span><br><span class="line">  HexDigit HexDigit HexDigit HexDigit</span><br><span class="line"></span><br><span class="line">HexDigit :: one of</span><br><span class="line">  0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F</span><br><span class="line"></span><br><span class="line">CodePoint ::</span><br><span class="line">  HexDigits[~Sep] but only if MV of HexDigits ≤ 0x10FFFF</span><br></pre></td></tr></table></figure>
 
-<p>对于错误形式的转译序列，执行时在代码解析阶段就直接报错。</p>
-<p><code>\uxxxx</code>形式必须是<code>\u</code>后面跟着四个十六进制字符（HexDigit）。</p>
+<p>对于错误形式的转义序列，执行时在代码解析阶段就直接报错。</p>
+<p><code>\u HexDigits</code>形式必须是<code>\u</code>后面跟着<strong>四个</strong>十六进制字符（HexDigit）。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// SyntaxError: Invalid Unicode escape sequence</span></span><br><span class="line"><span class="keyword">const</span> \uaa = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(\uaa)</span><br></pre></td></tr></table></figure>
 
-<p><code>\u&#123;xxxxxx&#125;</code>形式中括号对内也是十六进制字符，但是要求代表的码点值必须小于等于（0x10FFFF），也就是位于 Unicode 字符集规定的码点范围内。</p>
+<p><code>\u&#123;CodePoint&#125;</code>形式中括号对内也是十六进制字符，但是要求代表的码点值必须小于等于（0x10FFFF），也就是位于 Unicode 字符集规定的码点范围内。</p>
 <p>下面是几种非法的转义序列形式。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 错误，包含了不属于十六进制字符的字符g</span></span><br><span class="line">\u&#123;1g&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误，码点范围超出Unicode字符集</span></span><br><span class="line">\u&#123;<span class="number">110000</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确，\u&#123;42&#125;是字符B的转义形式</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">42</span>&#125; = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B&#x27;</span>, \u&#123;<span class="number">42</span>&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>转译序列除了必须形式正确外，其代表的对应码点也必须是合法的名称字符。<br>例如反撇号`本身不是合法的名称字符，那么使用转义序列的方式书写也是不正确的。</p>
+<p>转义序列除了必须形式正确外，其代表的对应码点也必须是合法的名称字符。<br>例如反撇号`本身不是合法的名称字符，那么使用转义序列的方式书写也是不正确的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// \u&#123;40&#125;是反撇号`的转义序列形式</span></span><br><span class="line"><span class="comment">// SyntaxError: Invalid or unexpected token</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">40</span>&#125; = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="码点序列语意"><a href="#码点序列语意" class="headerlink" title="码点序列语意"></a>码点序列语意</h2><p>由于允许使用 Unicode 转义序列，所以同一个名称的变量有多种写法。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 直接书写</span></span><br><span class="line">let A = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 转译序列形式</span></span><br><span class="line"><span class="comment">// \u0041是 &#x27;A&#x27;的转义形式</span></span><br><span class="line">let \u0041 = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 直接书写</span></span><br><span class="line">let A = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 转义序列形式</span></span><br><span class="line"><span class="comment">// \u0041是 &#x27;A&#x27;的转义形式</span></span><br><span class="line">let \u0041 = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 
 <p>Javascript 中对于标识符名称的处理都是基于码点序列，具有相同码点序列的不同写法被认为是同一个名称。在 ES6 规范中被称为 <a href="https://262.ecma-international.org/6.0/#sec-identifier-names-static-semantics-stringvalue">StringValue</a> 语意，在 ES 2022 中被称为 <a href="https://tc39.es/ecma262/#sec-identifiercodepoints">IdentifierCodePoints</a> 语意，使用的术语不相同，但表达式是同一个意思。因此上面这段代码执行的话会报错，因为同一个名称’A’的变量不允许<strong>重复定义</strong>。</p>
 <p>Unicode 中代表相同字符（canonically equivalent）的标识符名称并不一定等价，除非其使用的码点序列相同，参考 <a href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">ES 6 规范</a>。</p>
 <blockquote>
 <p>Two IdentifierName that are canonically equivalent according to the Unicode standard are not equal unless, after replacement of each UnicodeEscapeSequence, they are represented by the exact same sequence of code points.</p>
 </blockquote>
-<h2 id="合法名称判断"><a href="#合法名称判断" class="headerlink" title="合法名称判断"></a>合法名称判断</h2><p>通过上面的介绍我们了解了标识符名称的合法形式的定义，主要是两点。</p>
+<h2 id="合法标识符名称判断"><a href="#合法标识符名称判断" class="headerlink" title="合法标识符名称判断"></a>合法标识符名称判断</h2><p>通过上面的介绍我们了解了标识符名称的合法形式的定义，主要是两点。</p>
 <ol>
 <li>首字母必须合法</li>
 <li>后续字母必须合法</li>
@@ -340,8 +339,8 @@
 <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">isIdentifierName</span>(<span class="params">name: <span class="built_in">string</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> isFirst = <span class="literal">true</span></span><br><span class="line">  <span class="comment">// iterable protocol返回的是code point序列</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> char <span class="keyword">of</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(name)) &#123;</span><br><span class="line">    <span class="keyword">const</span> cp = char.<span class="title function_">codePointAt</span>(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> (isFirst) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="title function_">isIdentifierStart</span>(cp)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">      isFirst = <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="title function_">isIdentifierChar</span>(cp)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// isFirst理解为状态机，包含了空串、单个字符、多个字符情况</span></span><br><span class="line">  <span class="keyword">return</span> !isFirst</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这个实现中有几个关键点。</p>
-<p>第一点，接受的参数是一个字符串，需要从字符串获取其对应的 Unicode 码点序列。由于 Javascript 的字符串使用的是 UTF16 的变长编码，所以字符串获得指定下标位置字符对应码点的方法<code>codePointAt(index)</code>不能直接使用，需要增加对于代理对的检查。Babel 的实现没有包含这个检测逻辑，而是直接使用了<code>Array.from(name)</code>的形式。</p>
-<p>原因在于字符串实现了<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/@@iterator">迭代器协议</a>，得到一个字符串的迭代器，顺序返回字符串每个字符对应的码点，返回形式也是字符串，所以使用 for 循环遍历时每个字符代表一个码点，使用<code>codePointAt(0)</code>查询即可。</p>
+<p>第一点，接受的参数是一个字符串，需要从字符串获取其对应的 Unicode 码点序列。由于 Javascript 的字符串使用的是 UTF16 的变长编码，所以字符串获得指定下标位置字符对应码点的方法<code>codePointAt(index)</code>不能直接使用，需要增加对于代理对（Surrogate Pair）的检查。Babel 的实现没有包含这个逻辑，而是直接使用了<code>Array.from(name)</code>的形式。</p>
+<p>原因在于字符串实现了<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/@@iterator">迭代器协议</a>，顺序返回字符串每个字符对应的码点，返回形式也是字符串，所以使用 for 循环遍历时每个字符代表一个码点，再使用<code>codePointAt(0)</code>获得正确码点。</p>
 <p>第二点，关于首字母<code>isIdentifierStart</code>和后续字母<code>isIdentifierChar</code>的检测逻辑是前文中讲述的内容。</p>
 <p>第三点，整个检测逻辑是一个状态机的实现，<code>isFirst</code>变量可以理解为记录了状态机的匹配状态。状态机的合法结束情况是接受了至少一个字符，而且每个字符都满足对应的要求。状态机结束时函数返回<code>true</code>表示输入是合法的标识符名称。</p>
 <p>循环中单个字符非法时直接返回<code>false</code>；如果循环能正确结束表示所有字符合法，这时候还要满足至少一个字符，也就是<code>!isFirst</code>。</p>
@@ -374,7 +373,7 @@
 <p>ES 6 中的关键字列表如下，Babel 实现的辅助函数<a href="https://github.com/babel/babel/blob/main/packages/babel-helper-validator-identifier/src/keyword.ts#L94">isKeyword</a>与其一致。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">break case catch continue debugger default do else finally for function if return switch throw try var const while with new this super class extends export import null true false in instanceof typeof void delete</span><br></pre></td></tr></table></figure>
 
-<h2 id="保留字"><a href="#保留字" class="headerlink" title="保留字"></a>保留字</h2><p><a href="https://262.ecma-international.org/6.0/#sec-reserved-words">保留字</a>（ReservedWord）是指<strong>标识符名称</strong>中不是<strong>标识符</strong>的其余名称。也就是说一个名称如果属于保留字，那么就不能用到变量名、函数名、类名等需要标识符的语法位置。</p>
+<h2 id="保留字"><a href="#保留字" class="headerlink" title="保留字"></a>保留字</h2><p><a href="https://262.ecma-international.org/6.0/#sec-reserved-words">保留字</a>（ReservedWord）是指<strong>标识符名称</strong>中不是<strong>标识符</strong>的其余名称。也就是说一个名称如果属于保留字，就不能用到变量名、函数名、类名等需要标识符的语法位置。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> enum = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
 <p>上面代码中<code>enum</code>是保留字，所以不能作为变量名称使用。但是有些名称作为保留字是<a href="#conditional-reserved-word">有条件的</a>，条件不满足时不是保留字，从而可以作为变量名存在。设计这种机制主要是出于兼容旧代码的考虑，规范新增保留字时，旧代码中可能存在使用新保留字作为变量的情况，为了保证旧代码在新规范下还能正常运行，保留字的触发就需要设置一定条件。</p>
@@ -386,7 +385,6 @@
 
 <p>标识符的类型是根据 ECMAScript 规范定义的语法形式确定的，针对具体代码可以查询规范确定。</p>
 <p>不同的标识符类型对于合法的标识符名称的要求不同，通过 Javascript 语法规则和静态语意进行约束。</p>
-<p>下面讨论的是针对<strong>绑定标识符、引用标识符和标签标识符</strong>，</p>
 <p>下文中的“能/不能作为标识符”、“合法标识符”等表述，如无特殊说明其中“标识符”均指<strong>绑定标识符、引用标识符和标签标识符</strong>，普通标识符的名称没有特殊要求，可以使用符合标识符名称的任意内容。</p>
 <h1 id="合法标识符"><a href="#合法标识符" class="headerlink" title="合法标识符"></a>合法标识符</h1><h2 id="是关键字但不是保留字"><a href="#是关键字但不是保留字" class="headerlink" title="是关键字但不是保留字"></a>是关键字但不是保留字</h2><p>一部分关键字不是保留字，可以作为合法标识符使用，下面对属于这个分类的情况分别给出代码示例。</p>
 <p>模块导入导出语法中的关键字<code>from</code>/<code>as</code>可以作为标识符使用，因此下面的代码是合法的。</p>
@@ -418,9 +416,9 @@
 <h2 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h2><p>yield 关键字在非严格模式下可以作为合法标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 正确，非严格模式</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">yield</span> = &#123; <span class="attr">yield</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">yield</span>: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">yield</span>.<span class="property">yield</span>)</span><br></pre></td></tr></table></figure>
 
-<p>但是<a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors">静态语意</a>约束在严格模式下 yield 是保留字，不能作为标识符。</p>
-<p>使用’use strict’开启严格模式，下面代码中的的所有 yield 标识符都是非法的。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 严格模式</span></span><br><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">yield</span> = &#123; <span class="attr">yield</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">yield</span>: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">yield</span>.<span class="property">yield</span>)</span><br></pre></td></tr></table></figure>
+<p>但是<a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors">静态语意</a>规定<strong>严格模式</strong>下 yield 是保留字，不能作为标识符。</p>
+<p>使用’use strict’开启严格模式，下面代码中所有 yield 标识符都是非法的。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 严格模式</span></span><br><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">yield</span> = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="attr">yield</span>: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">yield</span>)</span><br></pre></td></tr></table></figure>
 
 <p>但是对象属性的标识符是普通标识符，所以名称为 yield 是合法的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">yield</span>: <span class="number">1</span> &#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">yield</span>)</span><br></pre></td></tr></table></figure>
@@ -428,13 +426,13 @@
 <p>模块代码（Module）中自动开启严格模式，下面的代码是模块代码，<code>yield</code>是保留字，所以定义名称为<code>yield</code>的变量报错。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// SyntaxError: Unexpected strict mode reserved word</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">yield</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
-<p><strong>Generator 函数</strong>中不允许使用名称为 yield 关键字的<strong>绑定标识符</strong>，非迭代器函数中无此限制。</p>
+<p><strong>Generator 函数</strong>中不允许使用名称为 yield 关键字的<strong>绑定标识符</strong>，非 Generator 函数中无此限制。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">yieldIsValidIdentifier</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 普通函数中合法</span></span><br><span class="line">  <span class="keyword">let</span> <span class="keyword">yield</span> = <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> *<span class="title function_">yieldIsUnexpectedIdentifier</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// SyntaxError: Unexpected identifier</span></span><br><span class="line">  <span class="comment">// 迭代器函数中非法</span></span><br><span class="line">  <span class="keyword">let</span> <span class="keyword">yield</span> = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>另外 Generator 函数中不允许以<strong>转义序列</strong>形式出现名称为 yield 的绑定标识符、引用标识符和标签标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> *<span class="title function_">gen</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// yield 转义形式</span></span><br><span class="line">  yiel\u&#123;<span class="number">64</span>&#125;: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="await"><a href="#await" class="headerlink" title="await "></a>await <span id="async-await"></span></h2><p>await 关键字在脚本环境中可以作为合法的标识符，严格模式对 await 是否是保留字<strong>无影响</strong>。下面脚本代码中的 await 都是合法标识符。</p>
+<h2 id="await"><a href="#await" class="headerlink" title="await "></a>await <span id="async-await"></span></h2><p>await 关键字在脚本（Script）环境中可以作为合法的标识符，严格模式对 await 是否是保留字<strong>无影响</strong>。下面脚本代码中的 await 都是合法标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">await</span> = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">await</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">await</span> = <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">await</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="string">&#x27;use strict&#x27;</span></span><br><span class="line">  <span class="keyword">var</span> <span class="keyword">await</span> = <span class="number">3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在<strong>模块代码</strong>中 await 是保留字，不能用做标识符，下面的代码是<strong>模块代码</strong>。</p>
@@ -454,14 +452,14 @@
 <h2 id="eval-arguments"><a href="#eval-arguments" class="headerlink" title="eval/arguments"></a>eval/arguments</h2><p>非严格模式下关键字 eval/arguments 可以作为合法标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">eval</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">eval</span>)</span><br></pre></td></tr></table></figure>
 
-<p>严格模式下不 eval/arguments 虽然不是保留字，但是也不允许作为绑定标识符，也就是不能作为变量名、函数名、类型名。</p>
+<p>严格模式下不 eval/arguments 虽然不是保留字，但是也不允许作为<strong>绑定标识符</strong>，也就是不能作为变量名、函数名、类型名。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 非法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">eval</span>(<span class="params"></span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但是作为其他类型标识符是合法的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 标签标识符 引用标识符</span></span><br><span class="line"><span class="attr">eval</span>: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">eval</span>)</span><br></pre></td></tr></table></figure>
 
 <p>arguments 关键字的情况类似。</p>
-<h2 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h2><p><code>true</code>、<code>false</code>、<code>null</code>是保留字，不能作为标识符。<code>undefined</code>的情况比较特殊，它是一个合法标识符。Javascript 引擎初始化时在全局对象上初始化了名称为<code>undefined</code>的属性，值也是<code>undefined</code>。所以全局环境可以直接使用<code>undefined</code>变量。</p>
+<h2 id="undefined"><a href="#undefined" class="headerlink" title="undefined"></a>undefined</h2><p><code>true</code>、<code>false</code>、<code>null</code>是保留字，不能作为标识符。<code>undefined</code>的情况比较特殊，它是一个合法标识符，不是<strong>关键字</strong>。Javascript 引擎初始化时在全局对象上初始化了名称为<code>undefined</code>的属性，值也是<code>undefined</code>，所以可以直接使用<code>undefined</code>变量。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">undefined</span>)</span><br></pre></td></tr></table></figure>
 
 <p>全局环境的<code>undefined</code>属性是不能重新<strong>赋值</strong>的，属性配置<code>configurable: false</code>。</p>
@@ -470,16 +468,16 @@
 <p>但是可以重新定义的方式来覆盖全局<code>undefined</code>属性。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> originalValue = <span class="literal">undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">undefined</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重新定义</span></span><br><span class="line"><span class="keyword">var</span> <span class="literal">undefined</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(originalValue)</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">undefined</span>)</span><br></pre></td></tr></table></figure>
 
-<p>如果是在函数内部的局部变量<code>undefined</code>就可以正常修改。</p>
+<p>函数内部的局部变量<code>undefined</code>就可以正常修改。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> globalUndefined = <span class="literal">undefined</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">localUndefinedIsMutable</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="literal">undefined</span> = globalUndefined</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> originalValue = <span class="literal">undefined</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// undefined</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">undefined</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 局部变量undefined赋值生效</span></span><br><span class="line">  <span class="literal">undefined</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// undefined</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(originalValue)</span><br><span class="line">  <span class="comment">// 1 值发生变化</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">undefined</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">localUndefinedIsMutable</span>()</span><br></pre></td></tr></table></figure>
 
-<p>由于存在上述的情况，所以代码中直接引用<code>undefined</code>变量时得到的值不一定是<code>undefined</code>。为了保证拿到<code>undefined</code>值，常见用方式是使用 <a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-void-operator">void 表达式</a>，<code>void expr</code>对表达式 expr 进行求值，然后返回<code>undefined</code>值，expr 可能包含副作用。</p>
+<p>由于存在上述的情况，所以代码中直接使用<code>undefined</code>变量时得到的值不一定是<code>undefined</code>。为了保证拿到<code>undefined</code>值，常见用方式是使用 <a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-void-operator">void 表达式</a>。<code>void expr</code>对表达式 expr 进行求值，然后返回<code>undefined</code>值，expr 可能包含副作用。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;a href=<span class="string">&quot;javascript:void(0)&quot;</span>&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
 
 <h2 id="let"><a href="#let" class="headerlink" title="let"></a>let</h2><p>let 在<strong>非严格模式</strong>下不是保留字，因此下面的形式是正确的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">let</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> &#123; <span class="keyword">let</span> &#125; = &#123;&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">let</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;let: &#x27;</span>, <span class="keyword">let</span>)</span><br></pre></td></tr></table></figure>
 
-<p>但是<a href="https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-let-and-const-declarations-static-semantics-early-errors">LexicalDeclaration</a>语句和<a href="https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-for-in-and-for-of-statements-static-semantics-early-errors">ForInOfStatement</a>中有更多要求，不允许<code>let</code>作为绑定名称（<a href="https://tc39.es/ecma262/multipage/syntax-directed-operations.html#sec-static-semantics-boundnames">BoundNames</a>）。</p>
+<p>但是<a href="https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-let-and-const-declarations-static-semantics-early-errors">LexicalDeclaration</a>语句和<a href="https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-for-in-and-for-of-statements-static-semantics-early-errors">ForInOfStatement</a>中不允许<code>let</code>作为绑定名称（<a href="https://tc39.es/ecma262/multipage/syntax-directed-operations.html#sec-static-semantics-boundnames">BoundNames</a>）。</p>
 <p>下面代码中名为<code>let</code>变量的声明都是非法的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// SyntaxError: let is disallowed as a lexically bound name</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> <span class="keyword">let</span> <span class="keyword">in</span> &#123;&#125;) &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">let</span> <span class="keyword">in</span> &#123;&#125;) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> <span class="keyword">let</span> <span class="keyword">of</span> []) &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">let</span> <span class="keyword">of</span> []) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">await</span> (<span class="keyword">let</span> <span class="keyword">let</span> <span class="keyword">of</span> []) &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">await</span> (<span class="keyword">const</span> <span class="keyword">let</span> <span class="keyword">of</span> []) &#123;&#125;</span><br></pre></td></tr></table></figure>
 
@@ -494,7 +492,7 @@
 <p>原因在于 const 永远是保留字，不像 let 一样只在严格模式下才是保留字，所以使用 const 作为标识符属于语法错误，在语法解析时就会报错，不需要额外规定。</p>
 <h2 id="PrivateIdentifier"><a href="#PrivateIdentifier" class="headerlink" title="PrivateIdentifier"></a>PrivateIdentifier</h2><p>参考<a href="https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-class-definitions-static-semantics-early-errors">规范</a></p>
 <h2 id="转义序列-1"><a href="#转义序列-1" class="headerlink" title="转义序列"></a>转义序列</h2><p>关键字和标识符对于转义序列的使用有差别。<strong>关键字</strong>中不允许使用转义序列。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// let &#123;&#125; = &#123;&#125;;</span></span><br><span class="line"><span class="comment">// \u&#123;6C&#125; 是 &#x27;l&#x27; 的转译序列</span></span><br><span class="line">\u&#123;6C&#125;et &#123;&#125;  = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// let &#123;&#125; = &#123;&#125;;</span></span><br><span class="line"><span class="comment">// \u&#123;6C&#125; 是 &#x27;l&#x27; 的转义序列</span></span><br><span class="line">\u&#123;6C&#125;et &#123;&#125;  = &#123;&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>上面将 let 使用了转义序列表示，所以代码解析的时候\u{6C}et 被当成标识符而不是关键字，后续语法解析会报错。</p>
 <p>Node 环境运行会给出如下报错信息。</p>
@@ -525,9 +523,9 @@
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">toBindingIdentifierName</span>(<span class="params">name: string</span>): string &#123;</span><br><span class="line">  name = <span class="title function_">toIdentifier</span>(name)</span><br><span class="line">  <span class="keyword">if</span> (name === <span class="string">&#x27;eval&#x27;</span> || name === <span class="string">&#x27;arguments&#x27;</span>) name = <span class="string">&#x27;_&#x27;</span> + name</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><ol>
-<li><p>解释这些概念 标识符名称、标识符、关键字、保留字，它们之间有什么联系和区别？</p>
-</li>
 <li><p>Javascript 和 C 语言在合法标识符名称形式上有什么区别？</p>
+</li>
+<li><p>解释标识符名称、标识符、关键字、保留字这些概念，它们之间有什么联系和区别？</p>
 </li>
 <li><p>这段代码的含义是什么，为什么可以这样写？</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function 求和(...数列) &#123;</span><br><span class="line">  return 数列.reduce((和, 数) =&gt; 数 + 和, 0)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(求和(1, 2, 3))</span><br></pre></td></tr></table></figure></li>
@@ -535,6 +533,8 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var \u&#123;12&#125; = 1</span><br></pre></td></tr></table></figure></li>
 <li><p>这段代码会能正确运行么，为什么？</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var a = 1</span><br><span class="line">var \u&#123;61&#125; = 2</span><br><span class="line">console.log(a)</span><br></pre></td></tr></table></figure></li>
+<li><p>给一个字符串<code>input</code>如何获得对应的码点序列数组？</p>
+</li>
 <li><p>这段代码会能正确运行么，为什么？</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let a = 1</span><br><span class="line">let \u&#123;61&#125; = 2</span><br><span class="line">console.log(a)</span><br></pre></td></tr></table></figure></li>
 <li><p>这段代码正确么，为什么？</p>
@@ -543,7 +543,7 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;use strict&#x27;;</span><br><span class="line">var private = 2</span><br><span class="line">console.log(private)</span><br></pre></td></tr></table></figure></li>
 <li><p>这段代码运行结果如何，为什么？</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">from</span> <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;from: &#x27;</span>, <span class="keyword">from</span>)</span><br></pre></td></tr></table></figure></li>
-<li><p>这段代码能按预期打印谁 1 么？不能的话如何修改？两个’eval’有什么区别</p>
+<li><p>这段代码能按预期打印 1 么？不能的话如何修改？两个’eval’有什么区别</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eval(&#x27;use strict; var eval = 1; console.log(eval)&#x27;)</span><br></pre></td></tr></table></figure></li>
 <li><p>yield 和 await 什么时候可以作为标识符，什么情况下作为关键字？</p>
 </li>
@@ -584,7 +584,7 @@
   </entry>
   <entry>
     <title>抽象语法树</title>
-    <url>/2022/02/27/babel/advanced/ast/</url>
+    <url>/2022/02/28/babel/advanced/ast/</url>
     <content><![CDATA[<p>Javascript 代码经过解析得到抽象语法树（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree），用来表示程序源码结构。</p>
 <p>前端基础工具 Babel、ESLint、Prettier 等使用的 Javascript 抽象语法树最早是火狐的工程师开发 SpiderMonkey 引擎时使用的格式，后来发展为统一的<a href="https://github.com/estree/estree">ESTree 规范</a>，包含 ECMAScript 规范各版本对应的抽象语法树文档和一些废弃或者是提案语法的文档。</p>
 <p>Babel 使用的抽象语法树规范参考<a href="https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md">官方文档</a>。抽象语法树规范主要描述每种语法特性的树节点，主要包括文件（File）、程序（Program）、语句（Statement）、声明（Declaration）、表达式（Expression）和其他杂项类型。</p>
