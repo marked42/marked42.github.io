@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"marked42.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ASCII and ISO-8859-1ASCII 全称为 American Standard Code for Information Interchange(美国标准信息交换码), 字符集中每个字符使用 7 个二进制位(bit)表示, 因此能够表示 128 个字符. 其中有 0 ~ 31 与 127 总共 33 个控制字符(control character), 32 ~ 126 包括空格(3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编码">
+<meta property="og:url" content="http://marked42.github.io/2022/03/01/encoding/index.html">
+<meta property="og:site_name" content="Epiphany">
+<meta property="og:description" content="ASCII and ISO-8859-1ASCII 全称为 American Standard Code for Information Interchange(美国标准信息交换码), 字符集中每个字符使用 7 个二进制位(bit)表示, 因此能够表示 128 个字符. 其中有 0 ~ 31 与 127 总共 33 个控制字符(control character), 32 ~ 126 包括空格(3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://marked42.github.io/images/ascii.png">
+<meta property="og:image" content="http://marked42.github.io/images/latin1.png">
+<meta property="og:image" content="http://marked42.github.io/images/surrogate_pair.png">
+<meta property="og:image" content="http://marked42.github.io/images/notepad_encoding.png">
+<meta property="og:image" content="http://marked42.github.io/images/liantong.png">
+<meta property="article:published_time" content="2022-03-01T17:25:56.548Z">
+<meta property="article:modified_time" content="2022-03-01T17:25:56.548Z">
+<meta property="article:author" content="penghui">
+<meta property="article:tag" content="Encoding">
+<meta property="article:tag" content="Unicode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://marked42.github.io/images/ascii.png">
+
+<link rel="canonical" href="http://marked42.github.io/2022/03/01/encoding/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>编码 | Epiphany</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Epiphany</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/marked42" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://marked42.github.io/2022/03/01/encoding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="penghui">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Epiphany">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          编码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-01 17:25:56" itemprop="dateCreated datePublished" datetime="2022-03-01T17:25:56+00:00">2022-03-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Encoding/" itemprop="url" rel="index"><span itemprop="name">Encoding</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="ASCII-and-ISO-8859-1"><a href="#ASCII-and-ISO-8859-1" class="headerlink" title="ASCII and ISO-8859-1"></a>ASCII and ISO-8859-1</h1><p>ASCII 全称为 <strong>A</strong>merican <strong>S</strong>tandard <strong>C</strong>ode for <strong>I</strong>nformation <strong>I</strong>nterchange(美国标准信息交换码), 字符集中每个字符使用 7 个二进制位(bit)表示, 因此能够表示 128 个字符. 其中有 0 ~ 31 与 127 总共 33 个控制字符(control character), 32 ~ 126 包括空格(32), 字母, 数字以及英文标点符号.</p>
+<p><img data-src="/images/ascii.png" alt="ascii"></p>
+<p>ISO-8859-1 字符集对 ASCII 字符进行扩展, 将最高位利用起来, 使用 8 位表示一个字符. 但是新增的 128 字符中前 32 个(0x80 - 0x9F)与 ASCII 类似进行保留, 因此只增加了 96 个字符, 主要是有重音(diacritics)符号的拉丁文, 因此又被称为 Latin-1 字符集.</p>
+<p><img data-src="/images/latin1.png" alt="latin1"></p>
+<h1 id="Code-Page"><a href="#Code-Page" class="headerlink" title="Code Page"></a>Code Page</h1><p>为了支持英语以外的语言文字, Windows 系统采取了代码页(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Code_page">Code Page</a>)的方案. 每个代码页是一个类似 ISO-8895-1 的编码方案, 对应为某个国家或者地区的文字, 在 0 ~ 127 的范围内和 ASCII 兼容, 在 128 ~ 255 的范围内为对应区域的文字编码.</p>
+<p>不同语言 Windows 的系统默认使用不同的代码也来支持相应语言文字. Windows 系统内有两类代码页 ANSI 和 OEM 代码页. ANSI 代码页应用于 Window 桌面应用程序, 代码范围为 874 ~ 1258. OEM 代码页最初有 IBM 设计, 应用于 Windows console 中, 代码范围 437 ~ 874.</p>
+<p>但是这样的代码页还是使用单字节来表示一个字符, 被称为单字节字符集(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/SBCS"><strong>S</strong>ingle-<strong>B</strong>yte <strong>C</strong>haracter <strong>S</strong>et</a>). 单字节字符接对于英语等字符个数少于 256 个的语言是合适的, 但是无法表示中日韩等字符个数较多的亚洲国家的语言文字. 对应的出现了使用两个字节的双字节字符集(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/DBCS"><strong>D</strong>ouble-<strong>B</strong>yte <strong>C</strong>haracter <strong>S</strong>et</a>), 也被称作多字节字符集(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Variable-width_encoding#MBCS">Multi-byte Character Set</a>).</p>
+<table>
+<thead>
+<tr>
+<th align="left">代码页</th>
+<th>语言</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">cp932</td>
+<td>日文</td>
+</tr>
+<tr>
+<td align="left">cp936</td>
+<td>简体中文 GBK</td>
+</tr>
+<tr>
+<td align="left">cp949</td>
+<td>韩文</td>
+</tr>
+<tr>
+<td align="left">cp950</td>
+<td>繁体中文 Big5</td>
+</tr>
+<tr>
+<td align="left">cp1252</td>
+<td>法国</td>
+</tr>
+</tbody></table>
+<p>在 Windows 系统 DOS 窗口下可以使用命令<code>chcp</code>来对代码页进行设置.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chcp        //不带参数调用查看当前代码页</span><br><span class="line">chcp 1252   //设置代码页为1252</span><br></pre></td></tr></table></figure>
+
+<p>但是代码页对于多语言的支持还存在一个问题, 不同国家的语言文字不能混用, 因为同一个代码页只能对应一个国家的语言文字. 代码页的方式已经不推荐使用, 我们需要一个能够表示所有国家语言文字的字符集, 这就是 Unicode 字符集.</p>
+<h1 id="Unicode"><a href="#Unicode" class="headerlink" title="Unicode"></a>Unicode</h1><p>Unicode 字符集全称 Universal Coded Character Set (UCS), 1988 年 8 月 Joe Becker 发布了 Unicode 的第一个草稿, 他解释说 Unicode 的名字代表了 unique(唯一), unified(统一), universal(通用) 三个意思.</p>
+<h2 id="码点"><a href="#码点" class="headerlink" title="码点"></a>码点</h2><p>Unicode 为每个字符提供唯一的编号, 叫做码点(Code Point). 下面是从<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unicode">Wiki</a>上摘抄的简短说明:</p>
+<blockquote>
+<p>In text processing, Unicode takes the role of providing a unique <em>code point</em>—a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Number">number</a>, not a glyph—for each character. In other words, Unicode represents a character in an abstract way and leaves the visual rendering (size, shape, <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Font">font</a>, or style) to other software, such as a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Web_browser">web browser</a> or <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Word_processor">word processor</a>.</p>
+</blockquote>
+<p>Unicode 的码点表示为 U+[XX]XXXX, X 表示一个 16 进制数字. 码点有 4-6 位, 不足 4 位的码点高位用 0 补齐 4 位, 超过 4 为的码点不做处理, 例如 U+0048(4 位补 0), U+1D11E(5 位), U+10FFFF(6 位). Unicode 标准规定码点范围为 U+0000 ~ U+10FFFF, 因此最大可以表示 1114112 个字符.</p>
+<p>为了方便管理码点被划分成 17 个平面, 每个平面都是 256×256 的表格, 可以表示 65536 个码点. 第一个平面 Plane 0 被称作基本多语言平面(<strong>B</strong>asic <strong>M</strong>ultilingual <strong>P</strong>lane ), 包括码点范围 U+0000 ~ U+FFFF. 第一个平面内的字符只需要两个字节即可进行编码, 这也是最初的 Unicode 标准的全部表示范围. 后来 Unicode 进行了扩展, 后面的 16 个平面被称作增补平面(<strong>S</strong>upplementary <strong>P</strong>lanes).</p>
+<p>所有 Unicode 字符被划分为不同的类别(Categories), 每个类别还划分为若干个子类别, 具体列表如下:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Subcategory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Letter(L)</td>
+<td>Lowercase(Ll), modifier(Lm), titlecase(Lt), uppercase(Lu), other(Lo)</td>
+</tr>
+<tr>
+<td>Mark(M)</td>
+<td>spacing combining(Mc), enclosing(Me), non-spacing(Mn)</td>
+</tr>
+<tr>
+<td>Number(N)</td>
+<td>decimal digit(Nd), letter(Nl), other(No)</td>
+</tr>
+<tr>
+<td>Punctuation(P)</td>
+<td>connector(Pc), dash(Pd), initial quote(Pi), final quote(Pf), open(Ps), close(Pe), other(Po)</td>
+</tr>
+<tr>
+<td>Symbol(S)</td>
+<td>currency(Sc), modifier(Sk), math(Sm), other(So)</td>
+</tr>
+<tr>
+<td>Separator(Z)</td>
+<td>line(Zl), paragraph(Zp), space(Zs)</td>
+</tr>
+<tr>
+<td>Other()</td>
+<td>Control(Cc), format(Cf), not assigned(Cn), private use(Co), surrogate(Cs)</td>
+</tr>
+</tbody></table>
+<h2 id="Unicode-Equivalence"><a href="#Unicode-Equivalence" class="headerlink" title="Unicode Equivalence"></a>Unicode Equivalence</h2><p>Dynamic Composition</p>
+<p>为了和已有标准相容, 某些被称为组合字符(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Precomposed_character">precomposed character</a>)的特殊字符可以表示成两种形式, 单一的码点或者多个码点组成的序列, 这叫做 Unicode 等价性(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unicode_equivalence">unicode equivalence</a>). 常见的有带重音字符(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Diacritic">diacritical mark</a>)字符和连字(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Typographic_ligature">ligatures</a>). 例如:</p>
+<ol>
+<li>带重音符号字母 é 可以表示成单个字符 U+00E9(带有尖音符号的小写拉丁字符 e), 也可以表示成字符序列 U+0065(小写拉丁字母 e)和 U+0301(尖音符号).</li>
+<li>单个字母 ff(小写拉丁连字 ff, U+FB00), 和两个连续的小写拉丁字母 f(U+0066U+0066)等价.</li>
+</ol>
+<p>Unicode 对于组合字符提供了两种等价概念: 标准等价(canonical equivalence)和相容等价(compatibility equivalence).</p>
+<blockquote>
+<p>Code point sequences that are defined as <strong>canonically equivalent</strong> are assumed to have the same appearance and meaning when printed or displayed.</p>
+<p>符合标准等价一串字符序列在打印或者显示时具有<strong>相同的外观与功能</strong>.</p>
+</blockquote>
+<p>上面列举的带重音符号的字母的两种形式就是标准等价.</p>
+<blockquote>
+<p>Sequences that are defined as <strong>compatible</strong> are assumed to have possibly distinct appearances, but the same meaning in some contexts</p>
+<p>相容等价的字符可能具有<strong>不同的外观</strong>, 但是所表示的字符是相同的.</p>
+</blockquote>
+<p>上面列举的连字的例子就属于相容等价.</p>
+<p>为了判断组合字符的等价性, Unicode 规定了四种等价形式, 可以选择将字符或者字符序列转换成相同的形式来判断其等价性. 正规形式(normalization)及其算法如下表.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Algorithm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NFD</strong> Normalization Form Canonical Decomposition</td>
+<td>以标准等价方式来分解</td>
+</tr>
+<tr>
+<td><strong>NFC</strong> Normalization Form Canonical Composition</td>
+<td>以标准等价方式来分解，然后以标准等价重组之。若是 singleton 的话，重组结果有可能和分解前不同。</td>
+</tr>
+<tr>
+<td><strong>NFKD</strong> Normalization Form Compatibility Decomposition</td>
+<td>以相容等价方式来分解</td>
+</tr>
+<tr>
+<td><strong>NFKC</strong> Normalization Form Compatibility Composition</td>
+<td>以相容等价方式来分解，然后以标准等价重组之。</td>
+</tr>
+</tbody></table>
+<p>详细的信息请参考<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unicode_equivalence">wiki unicode equivalence</a>.</p>
+<h2 id="UTF"><a href="#UTF" class="headerlink" title="UTF"></a>UTF</h2><p>UTF 全称 Unicode 转换格式(<strong>U</strong>CS <strong>T</strong>ransformation <strong>F</strong>ormat), Unicode 字符集只规定了字符对应的码点, 字符与码点是一对一的关系. UTF 为唯一的字符或者说码点提供在二进制位层面的编码方式, 具体包括 UTF-8, UTF-16 和 UTF-32.</p>
+<p>ASCII 与 ISO-9985-1 等字符集只对应一种字符编码方式, 因此字符集(character set)与字符编码(character encoding)的概念不做区分. 但是 Unicode 字符集有三种字符编码 UTF-8/UTF-16/UTF-32, 每种字符编码使用不同的二进制数据代表同一个 Unicode 字符.</p>
+<p>字符编码使用固定长度的代码单元(Code Unit)对字符进行编码, UTF-8, UTF-16 和 UTF-32 的代码单元分别是 8 位, 16 位和 32 位. 字符编码对字符集中所有字符进行编码时, 每个字符所需要的代码单元数目可能相同也可能不同. 所有字符需要的代码单元数目相同的编码方式被称为<strong>定长编码</strong>(fixed-width), 不同字符需要的代码单元数目不同的编码方式被称为<strong>变长编码</strong>(variable-width).</p>
+<table>
+<thead>
+<tr>
+<th align="left">编码</th>
+<th align="center">宽度</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">UTF-32</td>
+<td align="center">定长</td>
+<td align="left">使用一个代码单元(32 位)即可对所有 Unicode 字符进行编码, 高位用 0 补齐为 32 即可. 码点与编码字节内容一一对应. 这种编码方式优点在于查找效率高, 时间复杂度为<code>O(1)</code>, 缺点在于空间利用率低, 是相同内容的 ASCII 编码的四倍长度, 因此实践中较少使用.</td>
+</tr>
+<tr>
+<td align="left">UTF-8</td>
+<td align="center">变长</td>
+<td align="left">使用 1 ~ 4 个代码单元(8 位)对 Unicode 字符进行编码, 字符搜索时间复杂度为<code>O(n)</code>, 但是编码效率比较高, 是网络传输及存储使用最多的编码方式</td>
+</tr>
+<tr>
+<td align="left">UTF-16</td>
+<td align="center">变长</td>
+<td align="left">使用 1 ~ 2 个代码单元(16 位)对 Unicode 字符进行编码, 是 UTF-8 与 UTF-32 的折中方式, 内存操作效率比 UTF-8 高, 因此在程序中使用频繁.</td>
+</tr>
+<tr>
+<td align="left">UCS-2</td>
+<td align="center">定长</td>
+<td align="left">早期 Unicode 提出的编码方式, 属于 UTF-16 的一个子集, 只能对 U+000 ~ U+FFFF 范围内的码点进行编码, 已废弃.</td>
+</tr>
+<tr>
+<td align="left">UCS-4</td>
+<td align="center">定长</td>
+<td align="left">早期 Unicode 提出的编码方式, 功能上与 UTF-32 相同.</td>
+</tr>
+</tbody></table>
+<p>UTF 编码还包括 UTF-1, UTF-7 和 UTF-EBCDIC 三种方式, 不是很常用, 详细信息可参考<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unicode#cite_note-Glossary-5">Wiki</a>.</p>
+<h2 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a></h2><p>UTF-8 变长编码方案中一个字符编码长度可能为四种情况, 分别是 1,2,3,4 个字节. 具体的编码方式如下:</p>
+<table>
+<thead>
+<tr>
+<th align="center">编码长度(字节)</th>
+<th>二进制编码</th>
+<th align="center">有效位数</th>
+<th align="center">码点范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td><code>0XXXXXXX</code></td>
+<td align="center">7</td>
+<td align="center">U+0000 ~ U+007F</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td><code>110XXXXX 10XXXXXX</code></td>
+<td align="center">11</td>
+<td align="center">U+0080 ~ U+07FF</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td><code>1110XXXX 10XXXXXX 10XXXXXX</code></td>
+<td align="center">16</td>
+<td align="center">U+0800 ~ U+FFFF</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td><code>11110XXX 10XXXXXX 10XXXXXX 10XXXXXX</code></td>
+<td align="center">21</td>
+<td align="center">U+10000 ~ U+1FFFFF</td>
+</tr>
+</tbody></table>
+<h3 id="编码方案讨论"><a href="#编码方案讨论" class="headerlink" title="编码方案讨论"></a>编码方案讨论</h3><p>UTF-8 编码中任意取出一个字节<code>xxxxxxxx</code>如果确定这个字节这个字节属于那种长度的编码? 不同长度的变长编码之间应该如何区分呢?</p>
+<p>首先单字节编码与 ASCII 字符集兼容, 最高位为 0, 因此取出任意一个最高位为 0 的字节即可断定它属于单字节编码.</p>
+<p>其次为了和单字节编码进行区分, 其余编码中每个字节最高位都必须为 1, 形如<code>1XXXXXXX</code>. 这时第二高位有 0 和 1 两种选择, 如果最高两位<code>10</code>和<code>11</code>的二进制编码都允许的话, 那么给定任意字节将无法在剩余三种编码中进行区分. 而且只能选择<code>10</code>作为区分标志. 后续 3, 4 字节编码如果想要区分只能增加 1 的个数, 如果选择<code>11</code>作为区分标志, 那么<code>11XXXXXX</code>与<code>111XXXXX</code>之间是无法区分的, 因为<code>11XXXXXX</code>中后六位为有效编码为, 其中的最高位既可以为 0 也可以为 1. 至此得到第二个正确的编码形式<code>10XXXXXX</code>, 后续只要增加前导 1 的个数即可在给定任意字节的情况下判定它属于 1, 2, 3, 4 字节变长编码的哪一种.</p>
+<p>最后, 其实不需要做到给定任意单个字节即可判断其变长编码方式, 只需要在顺序解码的情况下, 能够区分连续的若干个字节属于那种编码方式即可. 最终的得到正式的 UTF-8 变长编方式, 复用了<code>10XXXXXX</code>的形式, 作为 2, 3, 4 字节编码中除去第一个字节外其余字节的编码形式, 同时第一个字节采用最高位增加 1 的个数的方法相互区分. 这样给定<code>10XXXXXX</code>形式的单个字节, 虽然无法判断它属于 2, 3, 4 字节编码中的哪一种, 但是对于连续字节流, 我们能够对区分 2, 3, 4 字节编码. 最终 2, 3, 4 字节编码第一个字节最高位分别以 2, 3, 4 个 1 后接一个 0 作为区分标志.</p>
+<p>值得注意的是 4 字节编码最大码点为 U+1FFFFF, 因此 4 字节 UTF-8 编码就可以对 Unicode 规定的所有码点 U+0000 ~ U+10FFFF 进行编码. 起始最初的提案中还包括了 5, 6 字节编码, 但是 32 字节的 UTF-16 编码的最大码点就是 U+10FFFF, 因此正式标准去除了 5, 6 字节编码的部分. 5, 6 字节编码形式如下:</p>
+<table>
+<thead>
+<tr>
+<th align="center">编码长度</th>
+<th>二进制编码</th>
+<th align="center">有效位数</th>
+<th align="center">码点范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">5</td>
+<td><code>111110XX 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX</code></td>
+<td align="center">26</td>
+<td align="center">U+200000 ~ U+3FFFFFF</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td><code>1111110X 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX 10XXXXXX</code></td>
+<td align="center">31</td>
+<td align="center">U+4000000 ~ U+7FFFFFFF</td>
+</tr>
+</tbody></table>
+<h3 id="编码范围与损耗"><a href="#编码范围与损耗" class="headerlink" title="编码范围与损耗"></a>编码范围与损耗</h3><p>Unicode 的码点范围就是 U+0000 ~ U+10FFFF, 四字节的 UTF-8 编码就已经足够对所有 Unicode 字符进行编码. 值得注意的是 2 字节编码 11 为有效位也能表示所有单字节 ASCII 字符, 于是 Unicode 规定对 ASCII 字符有限采用单字节编码, 因此 2 字节编码中的重复部分不对应任何编码. 如果在解码过程中遇到一个 2 字节编码的 ASCII 字符, 则意味着选择的编码方式不对. 类似的 3, 4 字节编码中也有一分部分二进制编码不对应任何字符.</p>
+<h3 id="简体中文-UTF-8-编码示例"><a href="#简体中文-UTF-8-编码示例" class="headerlink" title="简体中文 UTF-8 编码示例"></a>简体中文 UTF-8 编码示例</h3><p>对于一个具体字符’你’(U+4F60), UTF-8 编码的过程如下:</p>
+<ol>
+<li>判断码点 U+4F60 位于 U+0800 ~ U+FFFF 范围内, 应该采用 3 字节编码.</li>
+<li>码点的二进制形式为<code>0100 1111 0110 0000</code>, 三字节编码方式<code>1110XXXX 10XXXXXX 10XXXXXX</code>, 替换有效编码 X, 得到二进制编码<code>1110-0100 10-111101 10-10 0000</code>.</li>
+<li>将二进制字节编码形式重新转换成 16 进制编码得到<code>E4 BD A0</code>, 这就是’你’的 UTF-8 编码.</li>
+</ol>
+<p>由于大多数简体中文汉字位于 U+0800 ~ U+FFFF 范围内均采用 3 字节编码, 第一字节最高四位固定为<code>1110</code>,对应的 16 进制编是<code>E</code>, 因此大多数简体汉字 UTF-8 编码 16 进制形式如<code>EX XX XX</code>.</p>
+<h2 id="UTF-16"><a href="#UTF-16" class="headerlink" title="UTF-16"></a>UTF-16</h2><p>UTF-16 是一种变长 2 或 4 字节编码方式, 1 个代码单元(Code Unit)为 2 字节, 也就是采用 1 或 2 个代码单元进行编码. 对于码点范围 U+0000 ~ U+FFFF 的基本平面(BMP)内的所有字符, UTF-16 采用 2 个字节即可进行编码. 对与码点范围 U+10000 ~ U+10FFFF 的增补平面(SP)内的码点, UTF-16 采用代理对(Surrogate Pair)进行编码.</p>
+<h3 id="Surrogate-Pair"><a href="#Surrogate-Pair" class="headerlink" title="Surrogate Pair"></a>Surrogate Pair</h3><p>BMP 平面内最多可以表示 65536 个字符, 但是并不是平面上的每个格子都有对应的字符. 在 BMP 平面中有一片空白区域 U+D800 ~ U+DFFF 被称为代理区(Surrogate Area), 其中前半部分 U+D800 ~ U+DBFF 被称为高代理区(High Surrogate Area), 后半部分 U+DC00 ~ U+DFFFF 被称为低代理区(Low Surrogate Area). 从两个代理区中各取出一个码点即可组成一个代理对(Surrogate Pair).</p>
+<p><img data-src="/images/surrogate_pair.png" alt="surrogate_pair"></p>
+<p>每个代理区包含<code>4×256</code>个码点, 那么一个代理对可以表示 16 个增补平面中所有码点.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(4 * 256 ) * (4 * 256) = 16 * 65536</span><br></pre></td></tr></table></figure>
+
+<p>代理对必须按照高代理对在前, 低代理对在后的方式顺序摆放才能代理一个码点. <code>D800 CD00</code>是第一个增补字符, <code>DBFF DFFF</code>是最后一个增补字符.</p>
+<h3 id="Encoding-Process"><a href="#Encoding-Process" class="headerlink" title="Encoding Process"></a>Encoding Process</h3><p>BMP 平面内的码点直接对应于码点值相同的两个字节, 无需转换.</p>
+<p>增补平面 SP 中的码点要算出对应的高低代理码点的值即可, 公式如下:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Lead = (CodePoint - 10000_&#123;16&#125;) / 1024 + D800</span><br><span class="line">Trail  = (CodePoint - 10000_&#123;16&#125;) / 1024 + DC00</span><br></pre></td></tr></table></figure>
+
+<p>实际计算码点时不需要真的进行整数除法运算, 只需要进行一些移位操作即可.</p>
+<h2 id="Byte-Order-BOM"><a href="#Byte-Order-BOM" class="headerlink" title="Byte Order BOM"></a>Byte Order BOM</h2><p>在 UTF-16 和 UTF-32 等编码方式中, 一个代码单元包括 2 或 4 个字节, 这就产生了一个字节存储顺序(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>)的问题. 大端序(Big Endian)存储将高位字节放在前边, 低位字节放在后边, 小端序(Small Endian)则相反.</p>
+<blockquote>
+<p>When storing a word in big-endian format the most significant byte, which is the byte containing the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Most_significant_bit">most significant bit</a>, is stored first and the following bytes are stored in decreasing significance order, the least significant byte, which is the byte containing the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Least_significant_bit">least significant bit</a>, thus being stored at last place.</p>
+</blockquote>
+<p>BOM 正是用来表示 UTF-16 和 UTF-32 的字节顺序, BOM 就是若干个特殊字节, 放在字节流的最前端, 用来表示字节顺序, 不同编码的字节序如下:</p>
+<table>
+<thead>
+<tr>
+<th>BOM</th>
+<th>编码</th>
+<th>字节序</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x2B 0x2F 0x76 0x38 0x2D (5 个字节)</td>
+<td>UTF-7</td>
+<td>无</td>
+</tr>
+<tr>
+<td>0xEF 0xBB 0xBF (3 个字节)</td>
+<td>UTF-8</td>
+<td>无</td>
+</tr>
+<tr>
+<td>0xFF 0XFE (2 个字节)</td>
+<td>UTF-16-LE</td>
+<td>小端序</td>
+</tr>
+<tr>
+<td>0xFE 0XFF (2 个字节)</td>
+<td>UTF-16-BE</td>
+<td>大端序</td>
+</tr>
+<tr>
+<td>0xFF 0XFE 0x00 0x00 (4 个字节)</td>
+<td>UTF-32-LE</td>
+<td>小端序</td>
+</tr>
+<tr>
+<td>0x00 0x00 0xFE 0XFF (4 个字节)</td>
+<td>UTF-32-BE</td>
+<td>大端序</td>
+</tr>
+</tbody></table>
+<p>码点 U+FEFF 在 UTF-8 下的编码正是<code>EF BB BF</code>, 叫做零宽度非换行空格(zero-width non-breaking space), 缩写为<strong>ZWNBSP</strong>. 在屏幕上如字面意义一样显示一个宽度为零的空格, 结果就是什么也不显示. BOM 利用这一码点标识字节顺序.</p>
+<p>Unicode 标准中规定 UTF-8 编码带不带 BOM 都可以,并且推荐不带 BOM 以便与 ASCII 兼容.Windows 系统下的 UTF-8 默认带有 BOM, 而 eclipse 中编辑器使用的 UTF-8 编码默认不带 BOM. UTF-8 编码的代码单元(Code Unit)只有一个字节(8bits), 因此并不存在端序的问题.不论 BOM 出现与否, UTF-8 编码的字节流都是一样的.</p>
+<blockquote>
+<p>The Unicode Standard allows that the BOM “can serve as signature for UTF-8 encoded text where the character set is unmarked”.<br>Windows 平台下 UTF-8 带有 BOM 仅方便确定其真实编码, 但是这种做法造成了两个文件直接合并后交界处多出一个 BOM 标志, 对于 Linux 平台下的工具十分不友好,因此 Linux 平台下使用的都是不带 BOM 的 UTF-8 编码.</p>
+</blockquote>
+<p>UTF-8 网络传输使用,内存操作使用 UTF-16.</p>
+<h2 id="Error-Handling"><a href="#Error-Handling" class="headerlink" title="Error Handling"></a>Error Handling</h2><p>在字符串(character string)到字节串(byte string)的编码(encoding)过程或者反向的解码(decoding)过程中, 由于使用不同的编码方案可能出现无法编码或者解码的错误情况. 对于这些情况可以选择以下不同的方式进行错误处理.</p>
+<ol>
+<li>严格模式, 抛出错误并停止编码解码.</li>
+<li>忽略错误.</li>
+<li>使用问号?(U+003F 或者 U+FFFD)替代.</li>
+<li>使用相似的字形(<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Glyph">glyph</a>)替代.</li>
+<li>使用转义(escape)字符替代.</li>
+</ol>
+<p>示例如下, 将 Unicode 字符串”abcdé”使用 ASCII 进行编码, 字符 é(U+00E9)无法编码.</p>
+<table>
+<thead>
+<tr>
+<th>Error handler</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>strict</td>
+<td>raise an error</td>
+</tr>
+<tr>
+<td>ignore</td>
+<td><code>&quot;abcd&quot;</code></td>
+</tr>
+<tr>
+<td>replace by ?</td>
+<td><code>&quot;abcd?&quot;</code></td>
+</tr>
+<tr>
+<td>replace by similiar glyph</td>
+<td><code>&quot;abcde&quot;</code></td>
+</tr>
+<tr>
+<td>escape as hexadecimal</td>
+<td><code>&quot;abcd\xe9&quot;</code></td>
+</tr>
+<tr>
+<td>escape as XML entities</td>
+<td><code>&quot;abcd&amp;#233;&quot;</code></td>
+</tr>
+</tbody></table>
+<h1 id="汉字编码"><a href="#汉字编码" class="headerlink" title="汉字编码"></a>汉字编码</h1><h2 id="GB2312"><a href="#GB2312" class="headerlink" title="GB2312"></a>GB2312</h2><blockquote>
+<p>GB 2312-1980，全称《信息交换用汉字编码字符集 基本集》，由国家标准总局于 1980 年 3 月 9 号发布，1981 年 5 月 1 日实施，通行于大陆。新加坡等地也使用此编码。它是一个简化字的编码规范，也包括其他的符号、字母、日文假名等，共 7445 个图形字符，其中汉字占 6763 个。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="http://my.oschina.net/goldenshaw/blog/352859">国栋</a>对于 GB2312 的说明:</p>
+<blockquote>
+<p>它是一个 94×94 的表格，理论上有 94×94=8836 个空间。<br>横的叫区，竖的叫位，总共 94 个区，区和位的编号都从 1 开始。</p>
+</blockquote>
+<p>区位码</p>
+<blockquote>
+<p>所谓区位码就是这一 94×94 的大表格中的行号与列号了，均从 1 开始编号。<br>第一个字符 0101 为“全角空格”（图中显示为 SP（space））。</p>
+</blockquote>
+<p>国标码</p>
+<blockquote>
+<p>将区位码的区和位分别加上 32（=0x20）就得到了国标码。GB2312 方案规定，对上述表中任意一个图形字符都采用两个字节表示，每个字节均采用七位编码表示。一字节有 128 个空间，128-32=96，实际上，ASCII 中第 127 个也是控制码（DEL， 删除），再减去就还有 95 个有效位，再加上区位从 1 开始，又损失了一位，所以最终只有 94 个有效位了，这也是前面为何是一个 94×94 的表格。</p>
+</blockquote>
+<p>机内码</p>
+<blockquote>
+<p>将国标码高低字节分别加上 0x80（=128）就得到了机内码（有时又叫交换码）。128 的二进制形式为 10000000，加 128，简单地讲，就是把国标码最高位置成 1. 就是要兼容 ASCII，ASCII 最高位为 0，国标码加 128 后，高低字节的最高位都成了 1，这样就与 ASCII 区分开来。</p>
+</blockquote>
+<h2 id="GBK"><a href="#GBK" class="headerlink" title="GBK"></a>GBK</h2><blockquote>
+<p>GBK 是对 GB2312 的一个扩展，兼容 GB2312，因此也兼容 ASCII，也是一个变长编码方案。GBK 总体编码范围为 8140-FEFE，首字节在 81-FE 之间，尾字节在 40-FE 之间，总计 23940 个码位，共收入 21886 个汉字和图形符号，其中汉字（包括部首和构件）21003 个，图形符号 883 个。GBK 是国家有关部门与一些信息行业企业等一起合作推出的方案，但并未作为国家标准发布，只是一个事实上的标准，一个过渡方案，为 GB18030 标准作的一个准备。</p>
+</blockquote>
+<h1 id="缺省编码"><a href="#缺省编码" class="headerlink" title="缺省编码"></a>缺省编码</h1><p>Windows 与 Linux 平台下使用的默认编码并不相同, 因此同一文件在不同系统间会造成显示乱码的现象. Windows 系统下使用默认编码 ANSI(America Nantional Standards Institue), ANSI 并不指某个固定编码, 在 Win7 简体中文系统下 ANSI 就是 GBK 编码, 在港台地区可能是 Big5(繁体中文的一种编码方案), 在欧洲可能是(Latin-1). 即使都是简体中文系统, XP 和 Win7 的默认编码也肯能不一致.<br>Linux 系统下的默认编码都是不带 BOM 的 UTF-8 编码.<br>Windows 平台下的记事本编码比较坑爹, 如下图中显示有四种编码.<br><img data-src="/images/notepad_encoding.png" alt="notepad_encoding"><br>但是指代的具体编码却并不明显, 如下表, ANSI 默认为 GBK 编码, Unicode 实际上指的是, 与 Unicode big endian(UTF-16-BE)对应, 注意 UTF-16 都是带有 BOM 的, UTF-8</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>具体编码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ANSI(默认编码)</td>
+<td>简体中文 Win7 下为 GBK</td>
+</tr>
+<tr>
+<td>Unicode</td>
+<td>小端序 UTF-16</td>
+</tr>
+<tr>
+<td>Unicode big endian</td>
+<td>大端序 UTF-16</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td>带 BOM 的 UTF-8</td>
+</tr>
+</tbody></table>
+<p>记事本编码名称的随意造成了很多误解.</p>
+<p>Windows 记事本乱码比较出名的一个例子跟”联通”有关. 使用默认编码新建一个文本文档, 其内容只有”联通”两个字, 之后重新打开记事本, 文本内容却变成了乱码”��ͨ”. 原因是”联通”在默认编码 GBK 下为</p>
+<blockquote>
+<p>C1 AA CD</p>
+</blockquote>
+<p>其二进制形式为</p>
+<blockquote>
+<p>1100001 10101010 11001101 10101000</p>
+</blockquote>
+<p>正好符合 UTF-8 编码的二字节编码</p>
+<blockquote>
+<p>110XXXXX 10XXXXXX</p>
+</blockquote>
+<p>因此被解码为</p>
+<p><img data-src="/images/liantong.png" alt="liantong"></p>
+<p>得到的码点为 U+006A, 这个码点在 U+0000 ~ U+007F 之间, UTF-8 对这个范围内的码点使用单字节编码. 因此二字节编码与 U+0000 ~ U+007F 范围对应的部分废弃掉了, 不对应任何字符. 因此这两个字节无法成功解码, 使用 Unicode 字符’�’代替.</p>
+<p>虽然显示出现了乱码, 但是文件的内容并没有改变, 因此只需要使用 Vim 明确指定文件编码为 GBK 即可正确显示,下面设置首先使用 GBK 对文件解码.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set fileencodings=ucs-bom,gbk,utf-8,gb18030,big5,euc-jp,euc-kr,latin1</span><br></pre></td></tr></table></figure>
+
+<p>另外还有一点值得注意, Win7 简体中文系统对<strong>文件内容</strong>默认采用 GBK 编码, 但是<strong>文件名称</strong>却是使用 UTF-16 编码, 因此可以使用上述 Unicode 字符’�’作为文件名称.</p>
+<h1 id="指定编码"><a href="#指定编码" class="headerlink" title="指定编码"></a>指定编码</h1><p>有一些文件会在第一行或者前几行中指定文件编码, 如 xml/html/python/ruby 等源文件.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=UTF-8&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
+
+<p>由于前几行都是 ASCII 字符, 这种策略首先使用 ASCII 对于文件进行解码, 获得指定的正确编码后在对文件重新解码.</p>
+<h1 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h1><p>JavaScript 使用 UTF16 编码，没有字符类型，对于单个字符用内容相同的字符串表示。设计上对于字符串码点（Code Point）相关操作只提供<strong>常量时间</strong>的接口。</p>
+<ol>
+<li><code>str.charAt(index)</code> 返回下标<code>index</code>对应的代码单元（2 个字节)代表的单个字符形成的字符串，不考虑代理对因素。</li>
+<li><code>str.charCodeAt(index)</code> 返回下标<code>index</code>对应的代码单元整数值 [0, 65536) 之间，不考虑代理对的因素。</li>
+<li><code>str.codePointAt(index)</code> 返回下标<code>index</code>对应的字节处的字符码点，如果<code>index</code>位置开始的四个字节不是合法的代理对，直接返回<code>index</code>开始的两个字节对应的代码单元代表的码点。</li>
+</ol>
+<p>检查 UTF16 编码字节流是否合法，获取字符串中 Unicode 字符个数，获取字符串从左到右第几个 Unicode 字符等操作是线性时间操作，JavaScript 没有直接提供内置实现。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * find code point count in a string</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &#123;<span class="type">*</span>&#125; str target string whose unicode character count will be returned</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> unicode character count of input string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">getCodePointCount</span>(<span class="params">str</span>) &#123;</span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">isSurrogatePairHigh</span>(<span class="params">code</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="title class_">Number</span>.<span class="title function_">isInteger</span>(code)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">`code <span class="subst">$&#123;code&#125;</span> must be integer`</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> code &gt;= <span class="number">0xd800</span> &amp;&amp; code &lt;= <span class="number">0xdbff</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">isSurrogatePairLow</span>(<span class="params">code</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="title class_">Number</span>.<span class="title function_">isInteger</span>(code)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">`code <span class="subst">$&#123;code&#125;</span> must be integer`</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> code &gt;= <span class="number">0xdc00</span> &amp;&amp; code &lt;= <span class="number">0xdfff</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> str !== <span class="string">&#x27;string&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;str is not string&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; str.<span class="property">length</span>; ) &#123;</span><br><span class="line">    <span class="keyword">const</span> charCode = str.<span class="title function_">charCodeAt</span>(i)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">isSurrogatePairHigh</span>(charCode)) &#123;</span><br><span class="line">      <span class="keyword">const</span> nextCharCode = str.<span class="title function_">charCodeAt</span>(i + <span class="number">1</span>)</span><br><span class="line">      <span class="keyword">if</span> (<span class="title class_">Number</span>.<span class="built_in">isNaN</span>(nextCharCode)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">          <span class="string">&#x27;[invalid utf16 sequence]: string ends in unpaired high surrogate&#x27;</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!<span class="title function_">isSurrogatePairLow</span>(nextCharCode)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">          <span class="string">`[invalid utf16 code sequence]: high surrogate pair not followed by low part, (<span class="subst">$&#123;charCode&#125;</span> at <span class="subst">$&#123;i&#125;</span> is high, <span class="subst">$&#123;nextCharCode&#125;</span> at <span class="subst">$&#123;</span></span></span><br><span class="line"><span class="subst"><span class="string">            i + <span class="number">1</span></span></span></span><br><span class="line"><span class="subst"><span class="string">          &#125;</span> is not low)`</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">      count += <span class="number">1</span></span><br><span class="line">      i += <span class="number">2</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="title function_">isSurrogatePairLow</span>(charCode)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(</span><br><span class="line">        <span class="string">`[invalid utf16 code sequence]: low surrogate pair <span class="subst">$&#123;charCode&#125;</span> at <span class="subst">$&#123;i&#125;</span> not preceded by high part`</span></span><br><span class="line">      )</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      count += <span class="number">1</span></span><br><span class="line">      i += <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> count</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查找从左到右第几个 Code Point 实现可以参考<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt">mdn knownCharCodeAt</a>。</p>
+<h1 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h1><p>C++11 之前, <code>wchar_t</code>类型对宽字符提供同支持, 但是标准并没有规定其实现, 因此<code>wchar_t</code>的具体类型与实现相关. 在 windows 平台下<code>whcar_t</code>是 2 个字节, 在 Linux 平台下是 4 个字节, 这种不一致性使得使用<code>wchar_t</code>的代码不具有移植性. 宽字符与字符串字面量(Wide-Character String Literal)使用 L 开头作为标志, 如下所示.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">wchar_t</span> wc = <span class="string">L&#x27;中&#x27;</span>;</span><br><span class="line"><span class="type">wchar_t</span> wc_array[] = <span class="string">L&quot;汉字&quot;</span>;</span><br><span class="line">std::wstring wstr = <span class="string">L&quot;汉字&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>U</strong>nicode <strong>S</strong>tring <strong>L</strong>iteral 是 C++11 对 Unicode 提供的语言级别的支持. C++11 新增字符类型<code>char16_t</code>(至少 16 位)和<code>char32_t</code>(至少 32 位)分别表示 UTF-16 和 UTF-32 编码的代码单元, Unicode 三种编码 UTF-8, UTF-16, UTF-32 对应的字符串字面量分别以 u8, u, U 前缀作为标志.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> u8char = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"><span class="type">char</span> u8char_array[] = <span class="string">u8&quot;\U0001F607 is O:-)&quot;</span>;</span><br><span class="line">std::string u8str   = <span class="string">u8&quot;\U0001F607 is O:-)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">char16_t</span> u16char = <span class="string">u&#x27;😃&#x27;</span>;</span><br><span class="line"><span class="type">char16_t</span> u16char_array[] = <span class="string">u&quot;😃 = \U0001F603 is :-D&quot;</span>;</span><br><span class="line">std::u16string u16str    = <span class="string">u&quot;😃 = \U0001F603 is :-D&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">char32_t</span> u32char = <span class="string">U&quot;😎&quot;</span>;</span><br><span class="line"><span class="type">char32_t</span> u32char_array[] = <span class="string">U&quot;😎 = \U0001F60E is B-)&quot;</span>;</span><br><span class="line">std::u32string u32str    = <span class="string">U&quot;😎 = \U0001F60E is B-)&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h1><p>Java 规定源代码默认用 UTF-16 编码, 其中 String 类的 length 方法说明如下:</p>
+<blockquote>
+<p>Returns the length of this string. The length is equal to the number of <a target="_blank" rel="noopener" href="http://download.oracle.com/javase/7/docs/api/java/lang/Character.html#unicode">Unicode code units</a> in the string.</p>
+<p>返回字符串的长度,这一长度等于字符串中 Unicode 代码单元的数目.</p>
+</blockquote>
+<p>由于 BMP 范围内的编码只需要一个代码单元就可以表示,因此由 BMP 范围内的字符组成的字符串,length 返回的长度和字符的个数一致. 超过 BMP 范围的字符, 每个需要两个代码单元进行编码,length 返回的长度与字符个数并不一致.</p>
+<p>另外 Java 中 String 类的 getBytes()方法说明如下:</p>
+<blockquote>
+<p>Encodes this <code>String</code> into a sequence of bytes using the given <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html">charset</a>, storing the result into a new byte array.</p>
+<p>使用指定编码方式将字符串进行编码,并将结果存入一个新的字节数组.</p>
+</blockquote>
+<p>不指定字符集时将使用默认的编码, JVM 默认的编码方式是 UTF-8, 这一点可以使用命令行参数控制.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaw.exe -Dfile.encoding=UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是如果如果使用 UTF-16 编码, 得到的字节流中会包含 BOM, 结果字节流的长度比预期的要多 2 个字节.</p>
+<h1 id="Base64"><a href="#Base64" class="headerlink" title="Base64"></a><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Base64">Base64</a></h1><blockquote>
+<p><strong>Base64</strong> is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation</p>
+</blockquote>
+<p><strong>Base64</strong> encode binary data in a unit of 3 bytes, also 24 bits. If number of bytes is indivisible by 3, add extra bytes with value zero so there’re 3 bytes.</p>
+<p>Encoding 3 bytes “Man”.</p>
+<table style='border: 1px solid;'>
+    <tr>
+        <td style='border: 1px solid;'>source ASCII</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>M</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>a</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>n</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>source octets</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>77 (0x4d)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>97 (0x61)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>110 (0x6e)</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Bit pattern</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Table Index</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>19</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>22</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>5</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>46</td>
+    </tr>
+    <tr>
+        <td>Encoded Char</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>T</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>W</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>F</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>u</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Encoded octets</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>84 (0x54)</td>
+        <td colspan='6' align='center'>87 (0x57)</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>70 (0x46)</td>
+        <td colspan='6' align='center'>117 (0x75)</td>
+    </tr>
+</table>
+
+<p>Encoding 2 bytes “Ma”, last 6 bits are padding bits, encoded as “=”.</p>
+<table style='border: 1px solid;'>
+    <tr>
+        <td style='border: 1px solid;'>source ASCII</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>M</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>a</td>
+        <td style='border: 1px solid;' colspan='8' align='center'></td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>source octets</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>77 (0x4d)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>97 (0x61)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>0 (0x00)</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Bit pattern</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Table Index</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>19</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>22</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>4</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>0</td>
+    </tr>
+    <tr>
+        <td>Encoded Char</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>T</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>W</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>E</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>=</td>
+    </tr>
+</table>
+
+<p>Encoding 1 byte “M”, last 12 bits are padding bits, encoded as “==”.</p>
+<table style='border: 1px solid;'>
+    <tr>
+        <td style='border: 1px solid;'>source ASCII</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>M</td>
+        <td style='border: 1px solid;' colspan='8' align='center'></td>
+        <td style='border: 1px solid;' colspan='8' align='center'></td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>source octets</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>77 (0x4d)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>0 (0x00)</td>
+        <td style='border: 1px solid;' colspan='8' align='center'>0 (0x00)</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Bit pattern</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>1</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+        <td style='border: 1px solid;'>0</td>
+    </tr>
+    <tr>
+        <td style='border: 1px solid;'>Table Index</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>19</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>16</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>0</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>0</td>
+    </tr>
+    <tr>
+        <td>Encoded Char</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>T</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>Q</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>=</td>
+        <td style='border: 1px solid;' colspan='6' align='center'>=</td>
+    </tr>
+</table>
+
+<p>Base64 index table is used to encode 6 bits as ASCII character.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>A</td>
+<td>16</td>
+<td>Q</td>
+<td>32</td>
+<td>g</td>
+<td>48</td>
+<td>w</td>
+</tr>
+<tr>
+<td>1</td>
+<td>B</td>
+<td>17</td>
+<td>R</td>
+<td>33</td>
+<td>h</td>
+<td>49</td>
+<td>x</td>
+</tr>
+<tr>
+<td>2</td>
+<td>C</td>
+<td>18</td>
+<td>S</td>
+<td>34</td>
+<td>i</td>
+<td>50</td>
+<td>y</td>
+</tr>
+<tr>
+<td>3</td>
+<td>D</td>
+<td>19</td>
+<td>T</td>
+<td>35</td>
+<td>j</td>
+<td>51</td>
+<td>z</td>
+</tr>
+<tr>
+<td>4</td>
+<td>E</td>
+<td>20</td>
+<td>U</td>
+<td>36</td>
+<td>k</td>
+<td>52</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>F</td>
+<td>21</td>
+<td>V</td>
+<td>37</td>
+<td>l</td>
+<td>53</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6</td>
+<td>G</td>
+<td>22</td>
+<td>W</td>
+<td>38</td>
+<td>m</td>
+<td>54</td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>H</td>
+<td>23</td>
+<td>X</td>
+<td>39</td>
+<td>n</td>
+<td>55</td>
+<td>3</td>
+</tr>
+<tr>
+<td>8</td>
+<td>I</td>
+<td>24</td>
+<td>Y</td>
+<td>40</td>
+<td>o</td>
+<td>56</td>
+<td>4</td>
+</tr>
+<tr>
+<td>9</td>
+<td>J</td>
+<td>25</td>
+<td>Z</td>
+<td>41</td>
+<td>p</td>
+<td>57</td>
+<td>5</td>
+</tr>
+<tr>
+<td>10</td>
+<td>K</td>
+<td>26</td>
+<td>a</td>
+<td>42</td>
+<td>q</td>
+<td>58</td>
+<td>6</td>
+</tr>
+<tr>
+<td>11</td>
+<td>L</td>
+<td>27</td>
+<td>b</td>
+<td>43</td>
+<td>r</td>
+<td>59</td>
+<td>7</td>
+</tr>
+<tr>
+<td>12</td>
+<td>M</td>
+<td>28</td>
+<td>c</td>
+<td>44</td>
+<td>s</td>
+<td>60</td>
+<td>8</td>
+</tr>
+<tr>
+<td>13</td>
+<td>N</td>
+<td>29</td>
+<td>d</td>
+<td>45</td>
+<td>t</td>
+<td>61</td>
+<td>9</td>
+</tr>
+<tr>
+<td>14</td>
+<td>O</td>
+<td>30</td>
+<td>e</td>
+<td>46</td>
+<td>u</td>
+<td>62</td>
+<td>+</td>
+</tr>
+<tr>
+<td>15</td>
+<td>P</td>
+<td>31</td>
+<td>f</td>
+<td>47</td>
+<td>v</td>
+<td>63</td>
+<td>/</td>
+</tr>
+</tbody></table>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a target="_blank" rel="noopener" href="http://my.oschina.net/goldenshaw/blog/304493?fromerr=ChUuZ0yx">字符集与编码系列博客 - 国栋</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a></li>
+<li><a target="_blank" rel="noopener" href="http://unicodebook.readthedocs.io/index.html">Unicode book</a></li>
+<li>[UTF-8 and Unicode FAQ for Unix/Linux](UTF-8 and Unicode FAQ for Unix/Linux)</li>
+<li><a target="_blank" rel="noopener" href="http://blog.poxiao.me/p/unicode-character-encoding-conversion-in-cpp11/">破晓的博客 C+11 与 Unicode</a></li>
+<li><a target="_blank" rel="noopener" href="http://shop.oreilly.com/product/9780596101213.do">Unicode Explained</a></li>
+<li><a target="_blank" rel="noopener" href="http://shop.oreilly.com/product/9780596101213.do">The Unicode Standard</a></li>
+<li>International Components for Unicode (ICU)</li>
+<li><a target="_blank" rel="noopener" href="http://www.boost.org/doc/libs/1_60_0/libs/locale/doc/html/index.html">Boost.Locale</a></li>
+<li><a target="_blank" rel="noopener" href="http://cppcms.com/files/nowide/html/">Boost.Nowide</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.gnu.org/software/libiconv/">iconv</a></li>
+<li><a target="_blank" rel="noopener" href="http://utf8everywhere.org/">UTF8 everywhere</a></li>
+<li><a target="_blank" rel="noopener" href="http://programmers.stackexchange.com/questions/102205/should-utf-16-be-considered-harmful">Should UTF-16 be considered harmful?</a></li>
+<li><a target="_blank" rel="noopener" href="https://channel9.msdn.com/Events/CPP/C-PP-Con-2014/Unicode-in-CPP">Unicode in C++</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/46216008">程序员必备：彻底弄懂常见的 7 种中文字符编码</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41203455">从 Unicode 到 emoji</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>penghui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://marked42.github.io/2022/03/01/encoding/" title="编码">http://marked42.github.io/2022/03/01/encoding/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Encoding/" rel="tag"># Encoding</a>
+              <a href="/tags/Unicode/" rel="tag"># Unicode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/01/js/destructuring-spread/" rel="prev" title="解构与展开">
+      <i class="fa fa-chevron-left"></i> 解构与展开
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ASCII-and-ISO-8859-1"><span class="nav-number">1.</span> <span class="nav-text">ASCII and ISO-8859-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Code-Page"><span class="nav-number">2.</span> <span class="nav-text">Code Page</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unicode"><span class="nav-number">3.</span> <span class="nav-text">Unicode</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%81%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">码点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unicode-Equivalence"><span class="nav-number">3.2.</span> <span class="nav-text">Unicode Equivalence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UTF"><span class="nav-number">3.3.</span> <span class="nav-text">UTF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UTF-8"><span class="nav-number">3.4.</span> <span class="nav-text">UTF-8</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E6%96%B9%E6%A1%88%E8%AE%A8%E8%AE%BA"><span class="nav-number">3.4.1.</span> <span class="nav-text">编码方案讨论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E8%8C%83%E5%9B%B4%E4%B8%8E%E6%8D%9F%E8%80%97"><span class="nav-number">3.4.2.</span> <span class="nav-text">编码范围与损耗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-UTF-8-%E7%BC%96%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.4.3.</span> <span class="nav-text">简体中文 UTF-8 编码示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UTF-16"><span class="nav-number">3.5.</span> <span class="nav-text">UTF-16</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Surrogate-Pair"><span class="nav-number">3.5.1.</span> <span class="nav-text">Surrogate Pair</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Encoding-Process"><span class="nav-number">3.5.2.</span> <span class="nav-text">Encoding Process</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Byte-Order-BOM"><span class="nav-number">3.6.</span> <span class="nav-text">Byte Order BOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Error-Handling"><span class="nav-number">3.7.</span> <span class="nav-text">Error Handling</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%89%E5%AD%97%E7%BC%96%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">汉字编码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GB2312"><span class="nav-number">4.1.</span> <span class="nav-text">GB2312</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBK"><span class="nav-number">4.2.</span> <span class="nav-text">GBK</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%BA%E7%9C%81%E7%BC%96%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">缺省编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E7%BC%96%E7%A0%81"><span class="nav-number">6.</span> <span class="nav-text">指定编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaScript"><span class="nav-number">7.</span> <span class="nav-text">JavaScript</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C"><span class="nav-number">8.</span> <span class="nav-text">C++</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java"><span class="nav-number">9.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Base64"><span class="nav-number">10.</span> <span class="nav-text">Base64</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">11.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="penghui"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">penghui</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/marked42" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;marked42" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:penghui.zhang@foxmail.com" title="E-Mail → mailto:penghui.zhang@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">penghui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">54k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">49 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

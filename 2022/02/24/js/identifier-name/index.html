@@ -26,15 +26,16 @@
   <meta name="description" content="Javascript vs C下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript中什么是合法变量名？">
-<meta property="og:url" content="http://marked42.github.io/2022/02/24/js/identifier/index.html">
+<meta property="og:url" content="http://marked42.github.io/2022/02/24/js/identifier-name/index.html">
 <meta property="og:site_name" content="Epiphany">
 <meta property="og:description" content="Javascript vs C下面这段代码在 Javascript 中是合法的变量赋值语句，但是在 C 语言中并不合法。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://marked42.github.io/images/reserved-word-keyword.jpeg">
 <meta property="article:published_time" content="2022-02-24T21:19:04.000Z">
-<meta property="article:modified_time" content="2022-02-28T05:43:58.325Z">
+<meta property="article:modified_time" content="2022-03-01T17:25:56.548Z">
 <meta property="article:author" content="penghui">
 <meta property="article:tag" content="Identifier">
+<meta property="article:tag" content="Unicode">
 <meta property="article:tag" content="ECMAScript">
 <meta property="article:tag" content="IdentifierName">
 <meta property="article:tag" content="标识符名称">
@@ -43,12 +44,11 @@
 <meta property="article:tag" content="保留字">
 <meta property="article:tag" content="Keyword">
 <meta property="article:tag" content="关键字">
-<meta property="article:tag" content="Unicode">
 <meta property="article:tag" content="Babel">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://marked42.github.io/images/reserved-word-keyword.jpeg">
 
-<link rel="canonical" href="http://marked42.github.io/2022/02/24/js/identifier/">
+<link rel="canonical" href="http://marked42.github.io/2022/02/24/js/identifier-name/">
 
 
 <script id="page-configurations">
@@ -141,17 +141,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">17</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">18</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">3</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,7 +208,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://marked42.github.io/2022/02/24/js/identifier/">
+    <link itemprop="mainEntityOfPage" href="http://marked42.github.io/2022/02/24/js/identifier-name/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -238,7 +238,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-28 05:43:58" itemprop="dateModified" datetime="2022-02-28T05:43:58+00:00">2022-02-28</time>
+                <time title="修改时间：2022-03-01 17:25:56" itemprop="dateModified" datetime="2022-03-01T17:25:56+00:00">2022-03-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -614,7 +614,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://marked42.github.io/2022/02/24/js/identifier/" title="Javascript中什么是合法变量名？">http://marked42.github.io/2022/02/24/js/identifier/</a>
+    <a href="http://marked42.github.io/2022/02/24/js/identifier-name/" title="Javascript中什么是合法变量名？">http://marked42.github.io/2022/02/24/js/identifier-name/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -626,6 +626,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Identifier/" rel="tag"># Identifier</a>
+              <a href="/tags/Unicode/" rel="tag"># Unicode</a>
               <a href="/tags/ECMAScript/" rel="tag"># ECMAScript</a>
               <a href="/tags/IdentifierName/" rel="tag"># IdentifierName</a>
               <a href="/tags/%E6%A0%87%E8%AF%86%E7%AC%A6%E5%90%8D%E7%A7%B0/" rel="tag"># 标识符名称</a>
@@ -634,7 +635,6 @@
               <a href="/tags/%E4%BF%9D%E7%95%99%E5%AD%97/" rel="tag"># 保留字</a>
               <a href="/tags/Keyword/" rel="tag"># Keyword</a>
               <a href="/tags/%E5%85%B3%E9%94%AE%E5%AD%97/" rel="tag"># 关键字</a>
-              <a href="/tags/Unicode/" rel="tag"># Unicode</a>
               <a href="/tags/Babel/" rel="tag"># Babel</a>
           </div>
 
@@ -645,7 +645,7 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/02/28/babel/advanced/ast/" rel="next" title="抽象语法树">
+    <a href="/2022/03/01/babel/advanced/ast/" rel="next" title="抽象语法树">
       抽象语法树 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -722,20 +722,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -786,12 +786,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">38k</span>
+    <span title="站点总字数">54k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">35 分钟</span>
+    <span title="站点阅读时长">49 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
