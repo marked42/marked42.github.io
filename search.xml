@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>编码</title>
-    <url>/2022/03/01/encoding/</url>
+    <url>/2022/03/02/encoding/</url>
     <content><![CDATA[<h1 id="ASCII-and-ISO-8859-1"><a href="#ASCII-and-ISO-8859-1" class="headerlink" title="ASCII and ISO-8859-1"></a>ASCII and ISO-8859-1</h1><p>ASCII 全称为 <strong>A</strong>merican <strong>S</strong>tandard <strong>C</strong>ode for <strong>I</strong>nformation <strong>I</strong>nterchange(美国标准信息交换码), 字符集中每个字符使用 7 个二进制位(bit)表示, 因此能够表示 128 个字符. 其中有 0 ~ 31 与 127 总共 33 个控制字符(control character), 32 ~ 126 包括空格(32), 字母, 数字以及英文标点符号.</p>
 <p><img data-src="/images/ascii.png" alt="ascii"></p>
 <p>ISO-8859-1 字符集对 ASCII 字符进行扩展, 将最高位利用起来, 使用 8 位表示一个字符. 但是新增的 128 字符中前 32 个(0x80 - 0x9F)与 ASCII 类似进行保留, 因此只增加了 96 个字符, 主要是有重音(diacritics)符号的拉丁文, 因此又被称为 Latin-1 字符集.</p>
@@ -832,7 +832,7 @@
   </entry>
   <entry>
     <title>解构与展开</title>
-    <url>/2022/03/01/js/destructuring-spread/</url>
+    <url>/2022/03/02/js/destructuring-spread/</url>
     <content><![CDATA[<p>ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。</p>
 <p>如果你对相关内容非常熟悉，不妨直接跳到<a href="#quiz">习题部分</a>，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。</p>
 <h1 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h1><h2 id="为什么引入解构"><a href="#为什么引入解构" class="headerlink" title="为什么引入解构"></a>为什么引入解构</h2><p>ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。</p>
@@ -1130,7 +1130,7 @@
   </tr>
   <tr>
     <td>0x01000 - 0x10ffff</td>
-    <td>Unicode 补充平面（Astral）</td>
+    <td><a href="https://mathiasbynens.be/notes/javascript-identifiers-es6#acceptable-unicode-symbols"> Unicode 补充平面（Astral）<a>，ES 5不允许使用非补充平面字符作为标识符，ES6开始允许</td>
     <td>其他字符</td>
   </tr>
 </table>
@@ -1321,7 +1321,10 @@
 </blockquote>
 <p>原因在于 const 永远是保留字，不像 let 一样只在严格模式下才是保留字，所以使用 const 作为标识符属于语法错误，在语法解析时就会报错，不需要额外规定。</p>
 <h2 id="PrivateIdentifier"><a href="#PrivateIdentifier" class="headerlink" title="PrivateIdentifier"></a>PrivateIdentifier</h2><p>参考<a href="https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-class-definitions-static-semantics-early-errors">规范</a></p>
-<h2 id="转义序列-1"><a href="#转义序列-1" class="headerlink" title="转义序列"></a>转义序列</h2><p>关键字和标识符对于转义序列的使用有差别。<strong>关键字</strong>中不允许使用转义序列。</p>
+<h2 id="禁用转义序列的非标准行为"><a href="#禁用转义序列的非标准行为" class="headerlink" title="禁用转义序列的非标准行为"></a>禁用转义序列的非标准行为</h2><p>ES6 之前主流的 Javascript 引擎实际上都支持使用保留字作为标识符，只要保留字中包含至少一个转义字符，这是<a href="https://mathiasbynens.be/notes/javascript-identifiers-es6#non-standard">非标准行为</a>。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Invalid in ES5 and ES2015</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">var</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Invalid in ES5 and ES2015, but supported in old ES5 engines:</span></span><br><span class="line"><span class="keyword">var</span> v\u0061r;</span><br></pre></td></tr></table></figure>
+
+<p>但是 ES6 规范明确禁止了这种形式，规定关键字和标识符对于转义序列的使用有差别。<strong>关键字</strong>中不允许使用转义序列。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// let &#123;&#125; = &#123;&#125;;</span></span><br><span class="line"><span class="comment">// \u&#123;6C&#125; 是 &#x27;l&#x27; 的转义序列</span></span><br><span class="line">\u&#123;6C&#125;et &#123;&#125;  = &#123;&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>上面将 let 使用了转义序列表示，所以代码解析的时候\u{6C}et 被当成标识符而不是关键字，后续语法解析会报错。</p>
@@ -1394,6 +1397,10 @@
 <li><p>给一个字符串 name，如何将其转换成合法的标识符。</p>
 </li>
 </ol>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>本文的相关参考资料，罗列如下。</p>
+<p>可以首先阅读 <a href="https://mathiasbynens.be/notes/javascript-identifiers-es6">Valid JavaScript variable names in ES2015</a>，Mathias Byens 总结了 ES5 和 ES6 规范对于合法标识符名称的不同规定，从中可以了解到规范的演变过程。</p>
+<p><a href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">ES 2015 Names and Keywords</a>、<a href="https://tc39.es/ecma262/#sec-names-and-keywords">ES 2022 Names and Keywords</a>、<br><a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors">ES 2022 Identifiers Static Semantics Early Errors</a>等 ECMAScript 规范内容是本文主要来源。</p>
+<p>另外参考了 Babel 中标识符 <a href="https://github.com/babel/babel/tree/main/packages/babel-types/src/validators">validators</a>和 <a href="https://github.com/babel/babel/tree/main/packages/babel-types/src/converters">converters</a> 源码。</p>
 ]]></content>
       <categories>
         <category>深入理解Javascript</category>
@@ -1414,7 +1421,7 @@
   </entry>
   <entry>
     <title>抽象语法树</title>
-    <url>/2022/03/01/babel/advanced/ast/</url>
+    <url>/2022/03/02/babel/advanced/ast/</url>
     <content><![CDATA[<p>Javascript 代码经过解析得到抽象语法树（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree），用来表示程序源码结构。</p>
 <p>前端基础工具 Babel、ESLint、Prettier 等使用的 Javascript 抽象语法树最早是火狐的工程师开发 SpiderMonkey 引擎时使用的格式，后来发展为统一的<a href="https://github.com/estree/estree">ESTree 规范</a>，包含 ECMAScript 规范各版本对应的抽象语法树文档和一些废弃或者是提案语法的文档。</p>
 <p>Babel 使用的抽象语法树规范参考<a href="https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md">官方文档</a>。抽象语法树规范主要描述每种语法特性的树节点，主要包括文件（File）、程序（Program）、语句（Statement）、声明（Declaration）、表达式（Expression）和其他杂项类型。</p>
