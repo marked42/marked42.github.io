@@ -139,7 +139,7 @@ Babel 对于标识符的相关实现位于[这里](https://github.com/babel/babe
   </tr>
   <tr>
     <td>0x01000 - 0x10ffff</td>
-    <td>Unicode 补充平面（Astral）</td>
+    <td><a href="https://mathiasbynens.be/notes/javascript-identifiers-es6#acceptable-unicode-symbols"> Unicode 补充平面（Astral）<a>，ES 5不允许使用非补充平面字符作为标识符，ES6开始允许</td>
     <td>其他字符</td>
   </tr>
 </table>
@@ -776,9 +776,19 @@ for (let let in {}) {}
 
 参考[规范](https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-class-definitions-static-semantics-early-errors)
 
-## 转义序列
+## 禁用转义序列的非标准行为
 
-关键字和标识符对于转义序列的使用有差别。**关键字**中不允许使用转义序列。
+ES6 之前主流的 Javascript 引擎实际上都支持使用保留字作为标识符，只要保留字中包含至少一个转义字符，这是[非标准行为](https://mathiasbynens.be/notes/javascript-identifiers-es6#non-standard)。
+
+```js
+// Invalid in ES5 and ES2015
+var var;
+
+// Invalid in ES5 and ES2015, but supported in old ES5 engines:
+var v\u0061r;
+```
+
+但是 ES6 规范明确禁止了这种形式，规定关键字和标识符对于转义序列的使用有差别。**关键字**中不允许使用转义序列。
 
 ```js
 // let {} = {};
@@ -1008,3 +1018,14 @@ export default function toBindingIdentifierName(name: string): string {
 1. 如何判断名称 name 是否是保留字？
 1. 如何判断名称 name 是合法标识符？
 1. 给一个字符串 name，如何将其转换成合法的标识符。
+
+# 参考资料
+
+本文的相关参考资料，罗列如下。
+
+可以首先阅读 [Valid JavaScript variable names in ES2015](https://mathiasbynens.be/notes/javascript-identifiers-es6)，Mathias Byens 总结了 ES5 和 ES6 规范对于合法标识符名称的不同规定，从中可以了解到规范的演变过程。
+
+[ES 2015 Names and Keywords](https://262.ecma-international.org/6.0/#sec-names-and-keywords)、[ES 2022 Names and Keywords](https://tc39.es/ecma262/#sec-names-and-keywords)、
+[ES 2022 Identifiers Static Semantics Early Errors](https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors)等 ECMAScript 规范内容是本文主要来源。
+
+另外参考了 Babel 中标识符 [validators](https://github.com/babel/babel/tree/main/packages/babel-types/src/validators)和 [converters](https://github.com/babel/babel/tree/main/packages/babel-types/src/converters) 源码。
