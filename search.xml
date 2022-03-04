@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>编码</title>
-    <url>/2022/03/02/encoding/</url>
+    <url>/2022/03/04/encoding/</url>
     <content><![CDATA[<h1 id="ASCII-and-ISO-8859-1"><a href="#ASCII-and-ISO-8859-1" class="headerlink" title="ASCII and ISO-8859-1"></a>ASCII and ISO-8859-1</h1><p>ASCII 全称为 <strong>A</strong>merican <strong>S</strong>tandard <strong>C</strong>ode for <strong>I</strong>nformation <strong>I</strong>nterchange(美国标准信息交换码), 字符集中每个字符使用 7 个二进制位(bit)表示, 因此能够表示 128 个字符. 其中有 0 ~ 31 与 127 总共 33 个控制字符(control character), 32 ~ 126 包括空格(32), 字母, 数字以及英文标点符号.</p>
 <p><img data-src="/images/ascii.png" alt="ascii"></p>
 <p>ISO-8859-1 字符集对 ASCII 字符进行扩展, 将最高位利用起来, 使用 8 位表示一个字符. 但是新增的 128 字符中前 32 个(0x80 - 0x9F)与 ASCII 类似进行保留, 因此只增加了 96 个字符, 主要是有重音(diacritics)符号的拉丁文, 因此又被称为 Latin-1 字符集.</p>
@@ -130,7 +130,7 @@
 </tbody></table>
 <p>详细的信息请参考<a href="https://en.wikipedia.org/wiki/Unicode_equivalence">wiki unicode equivalence</a>.</p>
 <h2 id="UTF"><a href="#UTF" class="headerlink" title="UTF"></a>UTF</h2><p>UTF 全称 Unicode 转换格式(<strong>U</strong>CS <strong>T</strong>ransformation <strong>F</strong>ormat), Unicode 字符集只规定了字符对应的码点, 字符与码点是一对一的关系. UTF 为唯一的字符或者说码点提供在二进制位层面的编码方式, 具体包括 UTF-8, UTF-16 和 UTF-32.</p>
-<p>ASCII 与 ISO-9985-1 等字符集只对应一种字符编码方式, 因此字符集(character set)与字符编码(character encoding)的概念不做区分. 但是 Unicode 字符集有三种字符编码 UTF-8/UTF-16/UTF-32, 每种字符编码使用不同的二进制数据代表同一个 Unicode 字符.</p>
+<p>ASCII 与 ISO-9985-1 等字符集只对应一种字符编码方式, 因此字符集(character set)与字符编码(character encoding)的概念不做区分. 但是 Unicode 字符集有三种字符编码 UTF-8&#x2F;UTF-16&#x2F;UTF-32, 每种字符编码使用不同的二进制数据代表同一个 Unicode 字符.</p>
 <p>字符编码使用固定长度的代码单元(Code Unit)对字符进行编码, UTF-8, UTF-16 和 UTF-32 的代码单元分别是 8 位, 16 位和 32 位. 字符编码对字符集中所有字符进行编码时, 每个字符所需要的代码单元数目可能相同也可能不同. 所有字符需要的代码单元数目相同的编码方式被称为<strong>定长编码</strong>(fixed-width), 不同字符需要的代码单元数目不同的编码方式被称为<strong>变长编码</strong>(variable-width).</p>
 <table>
 <thead>
@@ -345,7 +345,7 @@
 </blockquote>
 <p><a href="http://my.oschina.net/goldenshaw/blog/352859">国栋</a>对于 GB2312 的说明:</p>
 <blockquote>
-<p>它是一个 94×94 的表格，理论上有 94×94=8836 个空间。<br>横的叫区，竖的叫位，总共 94 个区，区和位的编号都从 1 开始。</p>
+<p>它是一个 94×94 的表格，理论上有 94×94&#x3D;8836 个空间。<br>横的叫区，竖的叫位，总共 94 个区，区和位的编号都从 1 开始。</p>
 </blockquote>
 <p>区位码</p>
 <blockquote>
@@ -353,11 +353,11 @@
 </blockquote>
 <p>国标码</p>
 <blockquote>
-<p>将区位码的区和位分别加上 32（=0x20）就得到了国标码。GB2312 方案规定，对上述表中任意一个图形字符都采用两个字节表示，每个字节均采用七位编码表示。一字节有 128 个空间，128-32=96，实际上，ASCII 中第 127 个也是控制码（DEL， 删除），再减去就还有 95 个有效位，再加上区位从 1 开始，又损失了一位，所以最终只有 94 个有效位了，这也是前面为何是一个 94×94 的表格。</p>
+<p>将区位码的区和位分别加上 32（&#x3D;0x20）就得到了国标码。GB2312 方案规定，对上述表中任意一个图形字符都采用两个字节表示，每个字节均采用七位编码表示。一字节有 128 个空间，128-32&#x3D;96，实际上，ASCII 中第 127 个也是控制码（DEL， 删除），再减去就还有 95 个有效位，再加上区位从 1 开始，又损失了一位，所以最终只有 94 个有效位了，这也是前面为何是一个 94×94 的表格。</p>
 </blockquote>
 <p>机内码</p>
 <blockquote>
-<p>将国标码高低字节分别加上 0x80（=128）就得到了机内码（有时又叫交换码）。128 的二进制形式为 10000000，加 128，简单地讲，就是把国标码最高位置成 1. 就是要兼容 ASCII，ASCII 最高位为 0，国标码加 128 后，高低字节的最高位都成了 1，这样就与 ASCII 区分开来。</p>
+<p>将国标码高低字节分别加上 0x80（&#x3D;128）就得到了机内码（有时又叫交换码）。128 的二进制形式为 10000000，加 128，简单地讲，就是把国标码最高位置成 1. 就是要兼容 ASCII，ASCII 最高位为 0，国标码加 128 后，高低字节的最高位都成了 1，这样就与 ASCII 区分开来。</p>
 </blockquote>
 <h2 id="GBK"><a href="#GBK" class="headerlink" title="GBK"></a>GBK</h2><blockquote>
 <p>GBK 是对 GB2312 的一个扩展，兼容 GB2312，因此也兼容 ASCII，也是一个变长编码方案。GBK 总体编码范围为 8140-FEFE，首字节在 81-FE 之间，尾字节在 40-FE 之间，总计 23940 个码位，共收入 21886 个汉字和图形符号，其中汉字（包括部首和构件）21003 个，图形符号 883 个。GBK 是国家有关部门与一些信息行业企业等一起合作推出的方案，但并未作为国家标准发布，只是一个事实上的标准，一个过渡方案，为 GB18030 标准作的一个准备。</p>
@@ -407,7 +407,7 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">set fileencodings=ucs-bom,gbk,utf-8,gb18030,big5,euc-jp,euc-kr,latin1</span><br></pre></td></tr></table></figure>
 
 <p>另外还有一点值得注意, Win7 简体中文系统对<strong>文件内容</strong>默认采用 GBK 编码, 但是<strong>文件名称</strong>却是使用 UTF-16 编码, 因此可以使用上述 Unicode 字符’�’作为文件名称.</p>
-<h1 id="指定编码"><a href="#指定编码" class="headerlink" title="指定编码"></a>指定编码</h1><p>有一些文件会在第一行或者前几行中指定文件编码, 如 xml/html/python/ruby 等源文件.</p>
+<h1 id="指定编码"><a href="#指定编码" class="headerlink" title="指定编码"></a>指定编码</h1><p>有一些文件会在第一行或者前几行中指定文件编码, 如 xml&#x2F;html&#x2F;python&#x2F;ruby 等源文件.</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=UTF-8&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
@@ -514,7 +514,7 @@
     </tr>
 </table>
 
-<p>Encoding 2 bytes “Ma”, last 6 bits are padding bits, encoded as “=”.</p>
+<p>Encoding 2 bytes “Ma”, last 6 bits are padding bits, encoded as “&#x3D;”.</p>
 <table style='border: 1px solid;'>
     <tr>
         <td style='border: 1px solid;'>source ASCII</td>
@@ -571,7 +571,7 @@
     </tr>
 </table>
 
-<p>Encoding 1 byte “M”, last 12 bits are padding bits, encoded as “==”.</p>
+<p>Encoding 1 byte “M”, last 12 bits are padding bits, encoded as “&#x3D;&#x3D;”.</p>
 <table style='border: 1px solid;'>
     <tr>
         <td style='border: 1px solid;'>source ASCII</td>
@@ -800,14 +800,14 @@
 <td>47</td>
 <td>v</td>
 <td>63</td>
-<td>/</td>
+<td>&#x2F;</td>
 </tr>
 </tbody></table>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li><a href="http://my.oschina.net/goldenshaw/blog/304493?fromerr=ChUuZ0yx">字符集与编码系列博客 - 国栋</a></li>
 <li><a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a></li>
 <li><a href="http://unicodebook.readthedocs.io/index.html">Unicode book</a></li>
-<li>[UTF-8 and Unicode FAQ for Unix/Linux](UTF-8 and Unicode FAQ for Unix/Linux)</li>
+<li>[UTF-8 and Unicode FAQ for Unix&#x2F;Linux](UTF-8 and Unicode FAQ for Unix&#x2F;Linux)</li>
 <li><a href="http://blog.poxiao.me/p/unicode-character-encoding-conversion-in-cpp11/">破晓的博客 C+11 与 Unicode</a></li>
 <li><a href="http://shop.oreilly.com/product/9780596101213.do">Unicode Explained</a></li>
 <li><a href="http://shop.oreilly.com/product/9780596101213.do">The Unicode Standard</a></li>
@@ -832,7 +832,7 @@
   </entry>
   <entry>
     <title>解构与展开</title>
-    <url>/2022/03/02/js/destructuring-spread/</url>
+    <url>/2022/03/04/js/destructuring-spread/</url>
     <content><![CDATA[<p>ES6 开始引入了解构和展开的语法特性，使用起来非常方便。但是这些特性的用法还是非常丰富的，可能多数人平常并不太会注意到，本文对其进行了完整的剖析，以作参考。</p>
 <p>如果你对相关内容非常熟悉，不妨直接跳到<a href="#quiz">习题部分</a>，测试一下自己的理解，或者你可以在阅读完本文之后使用习题作为回顾。</p>
 <h1 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h1><h2 id="为什么引入解构"><a href="#为什么引入解构" class="headerlink" title="为什么引入解构"></a>为什么引入解构</h2><p>ES6 之前从对象或者数组中提取多个字段的话只能使用多个赋值语句，写法存在重复。</p>
@@ -898,7 +898,7 @@
 <h2 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h2><p>使用等号指定解构变量的默认值，默认值在解构得到<code>undefined</code>时生效。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// b === 2</span></span><br><span class="line"><span class="keyword">var</span> &#123; a, b = <span class="number">2</span> &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同时使用修改名称和默认值语法</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="attr">prop</span>: p = <span class="number">123</span> &#125; = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// b === 2</span></span><br><span class="line"><span class="keyword">var</span> [a, b = <span class="number">2</span>] = [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
 
-<h2 id="其余元素-属性（Rest-Element-Property）"><a href="#其余元素-属性（Rest-Element-Property）" class="headerlink" title="其余元素/属性（Rest Element/Property）"></a>其余元素/属性（Rest Element/Property）</h2><p>对象解构中可以使用<code>...rest</code>形式将未指定的属性统一收集到<code>rest</code>变量代表的对象中，称为对象的其余属性（Rest Property）。对象解构中只能有一个其余属性，位置必须是最后一个。</p>
+<h2 id="其余元素-x2F-属性（Rest-Element-x2F-Property）"><a href="#其余元素-x2F-属性（Rest-Element-x2F-Property）" class="headerlink" title="其余元素&#x2F;属性（Rest Element&#x2F;Property）"></a>其余元素&#x2F;属性（Rest Element&#x2F;Property）</h2><p>对象解构中可以使用<code>...rest</code>形式将未指定的属性统一收集到<code>rest</code>变量代表的对象中，称为对象的其余属性（Rest Property）。对象解构中只能有一个其余属性，位置必须是最后一个。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> &#123; a, ...rest &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SyntaxError: Rest element must be last element</span></span><br><span class="line"><span class="keyword">var</span> &#123; ..<span class="property">rest</span>, a &#125; = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SyntaxError: Rest element must be last element 指y</span></span><br><span class="line"><span class="keyword">let</span> &#123; x, ...y, ...z &#125; = obj;</span><br></pre></td></tr></table></figure>
 
 <p>数组解构中可以使用<code>...rest</code>形式将未指定的数组元素统一收集到<code>rest</code>变量代表的数组中，称为数组的其余元素（Rest Element）。数组解构中只能有一个其余元素（Rest Element），必须是最后一个。</p>
@@ -1052,10 +1052,10 @@
 <li><a href="https://tc39.es/ecma262/multipage/ecmascript-language-functions-and-classes.html#sec-parameter-lists">Parameter List</a></li>
 </ol>
 <p><a href="https://eslint.org/docs/rules/prefer-destructuring">prefer-destructuring</a>是 ESLint 中关于解构的规则。</p>
-<h2 id="展开（Spread）"><a href="#展开（Spread）" class="headerlink" title="展开（Spread）"></a>展开（Spread）</h2><p>展开语法的介绍可以首先参考 MDN 文档 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">Spread Syntax</a>和<a href="https://2ality.com/2016/10/rest-spread-properties.html#spreading-objects-versus-objectassign">ES2018: Rest/Spread Properties</a>的介绍。</p>
-<p>对象其余属性（Rest Property）和展开属性（Spread Property）的语法提案<a href="https://github.com/tc39/proposal-object-rest-spread">Object Rest/Spread Properties for ECMAScript</a>，其中分别对<a href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Rest.md">Rest</a>和<a href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Spread.md">Spread</a>做说明，关于语法的各种使用情况的例子可以作为准确参考。</p>
+<h2 id="展开（Spread）"><a href="#展开（Spread）" class="headerlink" title="展开（Spread）"></a>展开（Spread）</h2><p>展开语法的介绍可以首先参考 MDN 文档 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">Spread Syntax</a>和<a href="https://2ality.com/2016/10/rest-spread-properties.html#spreading-objects-versus-objectassign">ES2018: Rest&#x2F;Spread Properties</a>的介绍。</p>
+<p>对象其余属性（Rest Property）和展开属性（Spread Property）的语法提案<a href="https://github.com/tc39/proposal-object-rest-spread">Object Rest&#x2F;Spread Properties for ECMAScript</a>，其中分别对<a href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Rest.md">Rest</a>和<a href="https://github.com/tc39/proposal-object-rest-spread/blob/main/Spread.md">Spread</a>做说明，关于语法的各种使用情况的例子可以作为准确参考。</p>
 <p>其余元素（Rest Element）和其余属性（Rest Property）分别对应数组解构和对象解构，可以参考解构部分的规范描述。</p>
-<p>Babel 对于展开语法的转换实现在插件<a href="https://babel.dev/docs/en/babel-plugin-proposal-object-rest-spread">@babel/plugin-proposal-object-rest-spread</a>中。</p>
+<p>Babel 对于展开语法的转换实现在插件<a href="https://babel.dev/docs/en/babel-plugin-proposal-object-rest-spread">@babel&#x2F;plugin-proposal-object-rest-spread</a>中。</p>
 ]]></content>
       <categories>
         <category>深入理解Javascript</category>
@@ -1080,11 +1080,11 @@
 <p>这段代码中有几类分词：</p>
 <ol>
 <li>数字 <code>1</code></li>
-<li><strong>标识符（Identifier）</strong> <code>test1</code>/<code>a</code></li>
-<li><strong>保留字（ReservedWord）</strong><code>function</code>/<code>let</code></li>
+<li><strong>标识符（Identifier）</strong> <code>test1</code>&#x2F;<code>a</code></li>
+<li><strong>保留字（ReservedWord）</strong><code>function</code>&#x2F;<code>let</code></li>
 <li>空白与标点符号</li>
 </ol>
-<p>函数名、变量名等位置使用的是标识符类型的 Token，由数字、字母组成。另外为了不与数字冲突所以规定标识符不能以数字开头。<code>function</code>/<code>let</code>等固定语法位置使用的单词形式上也符合标识符定义，但是因为用作特殊用途，所以这一类单词被划分为保留字类型。</p>
+<p>函数名、变量名等位置使用的是标识符类型的 Token，由数字、字母组成。另外为了不与数字冲突所以规定标识符不能以数字开头。<code>function</code>&#x2F;<code>let</code>等固定语法位置使用的单词形式上也符合标识符定义，但是因为用作特殊用途，所以这一类单词被划分为保留字类型。</p>
 <p>ECMAScript 规范中<a href="https://262.ecma-international.org/6.0/#sec-names-and-keywords">名称与关键字</a>对名称的合法形式进行规定，主要涉及三个概念标识符名称（IdentifierName）、标识符（Identifier）和保留字（ReservedWord）。</p>
 <ol>
 <li>标识符是指能够作为合法的变量名、函数名、类名、属性名等名称的形式</li>
@@ -1105,7 +1105,7 @@
 <li>后续字符允许 U+200C (ZERO WIDTH NON-JOINER) and U+200D (ZERO WIDTH JOINER)</li>
 </ol>
 <p>这解释了<code>$a = 1</code>在 Javascript 中合法但是在 C 语言中非法的现象。</p>
-<h2 id="中文名称"><a href="#中文名称" class="headerlink" title="中文名称"></a>中文名称</h2><p>标识符合法形式中允许使用 Unicode 码点分类 UnicodeIDStart/UnicodeIDContinue，这意味着我们可以使用中文、日文、韩文等字符作为名称。</p>
+<h2 id="中文名称"><a href="#中文名称" class="headerlink" title="中文名称"></a>中文名称</h2><p>标识符合法形式中允许使用 Unicode 码点分类 UnicodeIDStart&#x2F;UnicodeIDContinue，这意味着我们可以使用中文、日文、韩文等字符作为名称。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> 姓 = <span class="string">&#x27;李&#x27;</span></span><br><span class="line"><span class="keyword">const</span> 名 = <span class="string">&#x27;白&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> 问好(姓, 名) &#123;</span><br><span class="line">  <span class="keyword">const</span> greeting = <span class="string">`你好，<span class="subst">$&#123;姓&#125;</span><span class="subst">$&#123;名&#125;</span> 🤪`</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(greeting)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 你好，李白 🤪</span></span><br><span class="line">问好(姓, 名)</span><br></pre></td></tr></table></figure>
 
 <p>上面代码中函数名、参数名、变量名都使用了中文，是合法的形式。</p>
@@ -1149,7 +1149,7 @@
 <p>下面是几种非法的转义序列形式。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 错误，包含了不属于十六进制字符的字符g</span></span><br><span class="line">\u&#123;1g&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误，码点范围超出Unicode字符集</span></span><br><span class="line">\u&#123;<span class="number">110000</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确，\u&#123;42&#125;是字符B的转义形式</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">42</span>&#125; = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;B&#x27;</span>, \u&#123;<span class="number">42</span>&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>转义序列除了必须形式正确外，其代表的对应码点也必须是合法的名称字符。<br>例如反撇号`本身不是合法的名称字符，那么使用转义序列的方式书写也是不正确的。</p>
+<p>转义序列除了必须形式正确外，其代表的对应码点也必须是合法的名称字符。<br>例如反撇号&#96;本身不是合法的名称字符，那么使用转义序列的方式书写也是不正确的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// \u&#123;40&#125;是反撇号`的转义序列形式</span></span><br><span class="line"><span class="comment">// SyntaxError: Invalid or unexpected token</span></span><br><span class="line"><span class="keyword">const</span> \u&#123;<span class="number">40</span>&#125; = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="码点序列语意"><a href="#码点序列语意" class="headerlink" title="码点序列语意"></a>码点序列语意</h2><p>由于允许使用 Unicode 转义序列，所以同一个名称的变量有多种写法。</p>
@@ -1176,7 +1176,7 @@
 <p>循环中单个字符非法时直接返回<code>false</code>；如果循环能正确结束表示所有字符合法，这时候还要满足至少一个字符，也就是<code>!isFirst</code>。</p>
 <h1 id="名称分类"><a href="#名称分类" class="headerlink" title="名称分类"></a>名称分类</h1><p>下图中对标识符名称、标识符、关键字、保留字等概念的关系进行总结。标识符名称是最大的圈，包含了其他三个概念。保留字和标识符是两个互斥的概念，合起来等于标识符名称。关键字和保留字、标识符各有重合。</p>
 <p><img data-src="/images/reserved-word-keyword.jpeg" alt="名称分类"></p>
-<p>名称的分类可以参考<a href="https://tc39.es/ecma262/#sec-keywords-and-reserved-words">规范</a>中的表述，其中总是<strong>可以</strong>作为标识符的名称（Math,window,toString 等）和总是<strong>不能</strong>作为标识符的名称（if/else 等）两种情况比较清楚，可以重点关注另外的三种情况<span id="conditional-reserved-word"></span>。</p>
+<p>名称的分类可以参考<a href="https://tc39.es/ecma262/#sec-keywords-and-reserved-words">规范</a>中的表述，其中总是<strong>可以</strong>作为标识符的名称（Math,window,toString 等）和总是<strong>不能</strong>作为标识符的名称（if&#x2F;else 等）两种情况比较清楚，可以重点关注另外的三种情况<span id="conditional-reserved-word"></span>。</p>
 <table>
   <tr>
     <th>分类</th>
@@ -1215,9 +1215,9 @@
 
 <p>标识符的类型是根据 ECMAScript 规范定义的语法形式确定的，针对具体代码可以查询规范确定。</p>
 <p>不同的标识符类型对于合法的标识符名称的要求不同，通过 Javascript 语法规则和静态语意进行约束。</p>
-<p>下文中的“能/不能作为标识符”、“合法标识符”等表述，如无特殊说明其中“标识符”均指<strong>绑定标识符、引用标识符和标签标识符</strong>，普通标识符的名称没有特殊要求，可以使用符合标识符名称的任意内容。</p>
+<p>下文中的“能&#x2F;不能作为标识符”、“合法标识符”等表述，如无特殊说明其中“标识符”均指<strong>绑定标识符、引用标识符和标签标识符</strong>，普通标识符的名称没有特殊要求，可以使用符合标识符名称的任意内容。</p>
 <h1 id="合法标识符"><a href="#合法标识符" class="headerlink" title="合法标识符"></a>合法标识符</h1><h2 id="是关键字但不是保留字"><a href="#是关键字但不是保留字" class="headerlink" title="是关键字但不是保留字"></a>是关键字但不是保留字</h2><p>一部分关键字不是保留字，可以作为合法标识符使用，下面对属于这个分类的情况分别给出代码示例。</p>
-<p>模块导入导出语法中的关键字<code>from</code>/<code>as</code>可以作为标识符使用，因此下面的代码是合法的。</p>
+<p>模块导入导出语法中的关键字<code>from</code>&#x2F;<code>as</code>可以作为标识符使用，因此下面的代码是合法的。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将模块导出到标识符from上，第一个from是标识符，第二个from是关键字</span></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">from</span> <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;from: &#x27;</span>, <span class="keyword">from</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将readFile导入为as变量，第一个as是关键字，第二个as是标识符</span></span><br><span class="line"><span class="keyword">import</span> &#123; readFile <span class="keyword">as</span> <span class="keyword">as</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;as: &#x27;</span>, <span class="keyword">as</span>)</span><br></pre></td></tr></table></figure>
 
 <p>异步函数语法中<code>async</code>关键字。</p>
@@ -1226,8 +1226,8 @@
 <p><code>for-of</code>循环中的<code>of</code>关键字。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将循环变量命名为of</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">of</span> <span class="keyword">of</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">of</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>对象语法中 get/set 属性或者类定义中 get/set 方法使用到的关键字<code>get</code>/<code>set</code>。</p>
-<p>对象属性中用到名称为<code>get</code>/<code>set</code>的变量。</p>
+<p>对象语法中 get&#x2F;set 属性或者类定义中 get&#x2F;set 方法使用到的关键字<code>get</code>&#x2F;<code>set</code>。</p>
+<p>对象属性中用到名称为<code>get</code>&#x2F;<code>set</code>的变量。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> get = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> set = <span class="number">2</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">name</span>: &#123;</span><br><span class="line">    <span class="title function_">get</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> get</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">set</span>(<span class="params"></span>) &#123;</span><br><span class="line">      set = value</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>类中定义名称为 get 的<code>get</code>属性和名称为 set 的<code>set</code>属性。</p>
@@ -1274,15 +1274,15 @@
 <p>在异步函数中同样也不允许以<strong>转义序列</strong>形式出现名称为 await 的绑定标识符、引用标识符和标签标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// SyntaxError: Keyword must not contain escaped characters</span></span><br><span class="line">  \u&#123;<span class="number">61</span>&#125;<span class="attr">wait</span>: <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="yield-await-存疑问题"><a href="#yield-await-存疑问题" class="headerlink" title="yield/await 存疑问题"></a>yield/await 存疑问题</h2><p>规范中关于 yield/await<a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors">部分</a>有个问题暂时没搞明白。</p>
+<h2 id="yield-x2F-await-存疑问题"><a href="#yield-x2F-await-存疑问题" class="headerlink" title="yield&#x2F;await 存疑问题"></a>yield&#x2F;await 存疑问题</h2><p>规范中关于 yield&#x2F;await<a href="https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-identifiers-static-semantics-early-errors">部分</a>有个问题暂时没搞明白。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 规则1</span><br><span class="line">BindingIdentifier[Yield, Await] : yield</span><br><span class="line">  It is a Syntax Error if this production has a [Yield] parameter.</span><br><span class="line"></span><br><span class="line">// 规则2</span><br><span class="line">BindingIdentifier[Yield, Await] : await</span><br><span class="line">  It is a Syntax Error if this production has an [Await] parameter.</span><br><span class="line"></span><br><span class="line">// 规则3</span><br><span class="line">IdentifierReference[Yield, Await] : Identifier</span><br><span class="line">BindingIdentifier[Yield, Await] : Identifier</span><br><span class="line">LabelIdentifier[Yield, Await] : Identifier</span><br><span class="line">  It is a Syntax Error if this production has a [Yield] parameter and StringValue of Identifier is &quot;yield&quot;.</span><br><span class="line">  It is a Syntax Error if this production has an [Await] parameter and StringValue of Identifier is &quot;await&quot;.</span><br></pre></td></tr></table></figure>
 
 <p>规则 3 的情况似乎覆盖了规则 1 和规则 2，为什么规则 1 和规则 2 需要单独表述？ （TODO:）</p>
 <p>如果有人知道这个问题或者有兴趣交流，可以联系<a href="/about">我</a>。</p>
-<h2 id="eval-arguments"><a href="#eval-arguments" class="headerlink" title="eval/arguments"></a>eval/arguments</h2><p>非严格模式下关键字 eval/arguments 可以作为合法标识符。</p>
+<h2 id="eval-x2F-arguments"><a href="#eval-x2F-arguments" class="headerlink" title="eval&#x2F;arguments"></a>eval&#x2F;arguments</h2><p>非严格模式下关键字 eval&#x2F;arguments 可以作为合法标识符。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">eval</span> = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">eval</span>)</span><br></pre></td></tr></table></figure>
 
-<p>严格模式下不 eval/arguments 虽然不是保留字，但是也不允许作为<strong>绑定标识符</strong>，也就是不能作为变量名、函数名、类型名。</p>
+<p>严格模式下不 eval&#x2F;arguments 虽然不是保留字，但是也不允许作为<strong>绑定标识符</strong>，也就是不能作为变量名、函数名、类型名。</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 非法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">eval</span>(<span class="params"></span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但是作为其他类型标识符是合法的。</p>
@@ -1361,23 +1361,29 @@
 <li><p>解释标识符名称、标识符、关键字、保留字这些概念，它们之间有什么联系和区别？</p>
 </li>
 <li><p>这段代码的含义是什么，为什么可以这样写？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function 求和(...数列) &#123;</span><br><span class="line">  return 数列.reduce((和, 数) =&gt; 数 + 和, 0)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(求和(1, 2, 3))</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function 求和(...数列) &#123;</span><br><span class="line">  return 数列.reduce((和, 数) =&gt; 数 + 和, 0)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(求和(1, 2, 3))</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>这段代码正确么，运行结果是什么？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var \u&#123;12&#125; = 1</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var \u&#123;12&#125; = 1</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>这段代码会能正确运行么，为什么？</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var a = 1</span><br><span class="line">var \u&#123;61&#125; = 2</span><br><span class="line">console.log(a)</span><br></pre></td></tr></table></figure></li>
 <li><p>给一个字符串<code>input</code>如何获得对应的码点序列数组？</p>
 </li>
 <li><p>这段代码会能正确运行么，为什么？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let a = 1</span><br><span class="line">let \u&#123;61&#125; = 2</span><br><span class="line">console.log(a)</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">let a = 1</span><br><span class="line">let \u&#123;61&#125; = 2</span><br><span class="line">console.log(a)</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>这段代码正确么，为什么？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var private = 2</span><br><span class="line">console.log(private)</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var private = 2</span><br><span class="line">console.log(private)</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>这段代码正确么，为什么？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;use strict&#x27;;</span><br><span class="line">var private = 2</span><br><span class="line">console.log(private)</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;use strict&#x27;;</span><br><span class="line">var private = 2</span><br><span class="line">console.log(private)</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>这段代码运行结果如何，为什么？</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">from</span> <span class="keyword">from</span> <span class="string">&#x27;fs&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;from: &#x27;</span>, <span class="keyword">from</span>)</span><br></pre></td></tr></table></figure></li>
 <li><p>这段代码能按预期打印 1 么？不能的话如何修改？两个’eval’有什么区别</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eval(&#x27;use strict; var eval = 1; console.log(eval)&#x27;)</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eval(&#x27;use strict; var eval = 1; console.log(eval)&#x27;)</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>yield 和 await 什么时候可以作为标识符，什么情况下作为关键字？</p>
 </li>
 <li><p>这段代码正确么，为什么？</p>
@@ -1421,7 +1427,7 @@
   </entry>
   <entry>
     <title>抽象语法树</title>
-    <url>/2022/03/02/babel/advanced/ast/</url>
+    <url>/2022/03/04/babel/advanced/ast/</url>
     <content><![CDATA[<p>Javascript 代码经过解析得到抽象语法树（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree），用来表示程序源码结构。</p>
 <p>前端基础工具 Babel、ESLint、Prettier 等使用的 Javascript 抽象语法树最早是火狐的工程师开发 SpiderMonkey 引擎时使用的格式，后来发展为统一的<a href="https://github.com/estree/estree">ESTree 规范</a>，包含 ECMAScript 规范各版本对应的抽象语法树文档和一些废弃或者是提案语法的文档。</p>
 <p>Babel 使用的抽象语法树规范参考<a href="https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md">官方文档</a>。抽象语法树规范主要描述每种语法特性的树节点，主要包括文件（File）、程序（Program）、语句（Statement）、声明（Declaration）、表达式（Expression）和其他杂项类型。</p>
@@ -1501,9 +1507,9 @@
 <h3 id="模式类似"><a href="#模式类似" class="headerlink" title="模式类似"></a>模式类似</h3><p>可能作为 Pattern 的几种类型。</p>
 <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">PatternLike</span> =</span><br><span class="line">  | <span class="title class_">Identifier</span></span><br><span class="line">  | <span class="title class_">RestElement</span></span><br><span class="line">  | <span class="title class_">AssignmentPattern</span></span><br><span class="line">  | <span class="title class_">ArrayPattern</span></span><br><span class="line">  | <span class="title class_">ObjectPattern</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="作用域相关"><a href="#作用域相关" class="headerlink" title="作用域相关"></a>作用域相关</h3><p>作用域相关的节点别名有 Scopable/BlockParent/Block 等，详细机制可以参考<a href="./plugin-scope.md">插件作用域篇</a>。</p>
-<h1 id="AST-相关的工具"><a href="#AST-相关的工具" class="headerlink" title="AST 相关的工具"></a>AST 相关的工具</h1><p>@babel/types 包为操作 AST 节点提供了很多辅助函数，涵盖了绝大部分使用场景。对于常见的操作可以先查看下官方是否已经提供，下面列出一些常见的工具函数。</p>
-<h2 id="构造-AST"><a href="#构造-AST" class="headerlink" title="构造 AST"></a>构造 AST</h2><p>每个节点在@babel/type 中都定义有相关的构造函数，</p>
+<h3 id="作用域相关"><a href="#作用域相关" class="headerlink" title="作用域相关"></a>作用域相关</h3><p>作用域相关的节点别名有 Scopable&#x2F;BlockParent&#x2F;Block 等，详细机制可以参考<a href="./plugin-scope.md">插件作用域篇</a>。</p>
+<h1 id="AST-相关的工具"><a href="#AST-相关的工具" class="headerlink" title="AST 相关的工具"></a>AST 相关的工具</h1><p>@babel&#x2F;types 包为操作 AST 节点提供了很多辅助函数，涵盖了绝大部分使用场景。对于常见的操作可以先查看下官方是否已经提供，下面列出一些常见的工具函数。</p>
+<h2 id="构造-AST"><a href="#构造-AST" class="headerlink" title="构造 AST"></a>构造 AST</h2><p>每个节点在@babel&#x2F;type 中都定义有相关的构造函数，</p>
 <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> t <span class="keyword">from</span> <span class="string">&#x27;@babel/types&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1 + 2</span></span><br><span class="line">t.<span class="title function_">binaryExpression</span>(<span class="string">&#x27;+&#x27;</span>, t.<span class="title function_">numericLiteral</span>(<span class="number">1</span>), t.<span class="title function_">numericLiteral</span>(<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
 
 <h2 id="查询验证节点类型"><a href="#查询验证节点类型" class="headerlink" title="查询验证节点类型"></a>查询验证节点类型</h2><p>每个节点类型都有<code>is</code>开头的辅助函数判断指定节点参数是否是某种类型的节点，可以接受第二个可选参数指定需要满足的属性。</p>
