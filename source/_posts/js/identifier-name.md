@@ -331,7 +331,9 @@ var enum = 1
 
 上面代码中`enum`是保留字，所以不能作为变量名称使用。但是有些名称作为保留字是[有条件的](#conditional-reserved-word)，条件不满足时不是保留字，从而可以作为变量名存在。设计这种机制主要是出于兼容旧代码的考虑，规范新增保留字时，旧代码中可能存在使用新保留字作为变量的情况，为了保证旧代码在新规范下还能正常运行，保留字的触发就需要设置一定条件。
 
-ES2022 中的保留字列表
+Javascript 的不同版本规范定义的保留字列表有更新变化，可以参考文章[Reserved keywords in JavaScript](https://mathiasbynens.be/notes/reserved-keywords)。
+
+当前时间最新规范 ES2022 中的保留字列表
 
 ```
 await break case catch class const continue debugger default delete do else enum export extends false finally for function if import in instanceof new null return super switch this throw true try typeof var void while with yield
