@@ -2,7 +2,6 @@
 title: 抽象语法树
 date: { { date } }
 category:
-  - FrontEnd
   - Babel
 tags:
   - Javascript
