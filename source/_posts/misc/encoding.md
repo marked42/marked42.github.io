@@ -2,7 +2,7 @@
 title: 编码
 date: { { date } }
 category:
-  - Encoding
+  - 杂项
 tags:
   - Encoding
   - Unicode
@@ -55,7 +55,7 @@ Unicode 为每个字符提供唯一的编号, 叫做码点(Code Point). 下面�
 
 Unicode 的码点表示为 U+[XX]XXXX, X 表示一个 16 进制数字. 码点有 4-6 位, 不足 4 位的码点高位用 0 补齐 4 位, 超过 4 为的码点不做处理, 例如 U+0048(4 位补 0), U+1D11E(5 位), U+10FFFF(6 位). Unicode 标准规定码点范围为 U+0000 ~ U+10FFFF, 因此最大可以表示 1114112 个字符.
 
-为了方便管理码点被划分成 17 个平面, 每个平面都是 256×256 的表格, 可以表示 65536 个码点. 第一个平面 Plane 0 被称作基本多语言平面(**B**asic **M**ultilingual **P**lane ), 包括码点范围 U+0000 ~ U+FFFF. 第一个平面内的字符只需要两个字节即可进行编码, 这也是最初的 Unicode 标准的全部表示范围. 后来 Unicode 进行了扩展, 后面的 16 个平面被称作增补平面(**S**upplementary **P**lanes).
+为了方便管理码点被划分成 17 个平面, 每个平面都是 256×256 的表格, 可以表示 65536 个码点. 第一个平面 Plane 0 被称作基本多语言平面(**B**asic **M**ultilingual **P**lane ), 包括码点范围 U+0000 ~ U+FFFF. 第一个平面内的字符只需要两个字节即可进行编码, 这也是最初的 Unicode 标准的全部表示范围. 后来 Unicode 进行了扩展, 后面的 16 个平面被称作增补平面(**S**upplementary **P**lanes)，也被叫做 [Astral Set](https://www.quora.com/Why-are-unicode-characters-outside-the-BMP-called-astral)。
 
 所有 Unicode 字符被划分为不同的类别(Categories), 每个类别还划分为若干个子类别, 具体列表如下:
 
@@ -681,3 +681,5 @@ Base64 index table is used to encode 6 bits as ASCII character.
 1. [Unicode in C++](https://channel9.msdn.com/Events/CPP/C-PP-Con-2014/Unicode-in-CPP)
 1. [程序员必备：彻底弄懂常见的 7 种中文字符编码](https://zhuanlan.zhihu.com/p/46216008)
 1. [从 Unicode 到 emoji](https://zhuanlan.zhihu.com/p/41203455)
+1. [How to get all Unicode characters from specific categories?](https://stackoverflow.com/questions/43150498/how-to-get-all-unicode-characters-from-specific-categories)
+1. [码点查询网站](https://codepoints.net/)
